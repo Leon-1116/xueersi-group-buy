@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學而思新校區團課平台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange-50:#FFF7ED;
+  --orange-100:#FFEDD5;
+  --orange-200:#FDE2CA;
+  --orange-300:#FCD1B8;
+  --orange-400:#FAB695;
+  --orange-500:#F59E7A;
+  --orange-600:#E07A4F;
+  --orange-700:#C25E33;
+  --orange-800:#9A4522;
+  --orange-900:#7C381B;
+  --gray-50:#F9FAFB;
+  --gray-100:#F3F4F6;
+  --gray-200:#E5E7EB;
+  --gray-300:#D1D5DB;
+  --gray-400:#9CA3AF;
+  --gray-500:#6B7280;
+  --gray-600:#4B5563;
+  --gray-700:#374151;
+  --gray-800:#1F2937;
+  --gray-900:#111827;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06);
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.1),0 10px 10px -5px rgba(0,0,0,.04);
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-lg:16px;
+  --transition:.25s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,#FFF7ED,#FFEDD5,#FFF7ED);color:var(--gray-800);line-height:1.6;min-height:100vh;padding-bottom:64px}
+a{color:var(--orange-600);text-decoration:none}
+a:hover{color:var(--orange-700)}
+::selection{background:var(--orange-300);color:var(--gray-800)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--orange-300);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--orange-400)}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;transition:var(--transition);font-family:inherit}
+.btn-primary{background:var(--orange-500);color:#fff}
+.btn-primary:hover{background:var(--orange-600);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-secondary{background:var(--orange-100);color:var(--orange-700)}
+.btn-secondary:hover{background:var(--orange-200)}
+.btn-outline{background:transparent;border:1.5px solid var(--orange-400);color:var(--orange-700)}
+.btn-outline:hover{background:var(--orange-50)}
+.btn-ghost{background:transparent;color:var(--gray-600)}
+.btn-ghost:hover{background:var(--orange-100);color:var(--orange-700)}
+.btn-sm{padding:6px 14px;font-size:13px}
+.btn-danger{background:#EF4444;color:#fff}
+.btn-danger:hover{background:#DC2626}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal-overlay.active{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:var(--radius-lg);width:90%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;padding:32px;box-shadow:var(--shadow-xl);transform:scale(.95);transition:transform .3s}
+.modal-overlay.active .modal{transform:scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-shrink:0}
+.modal-header h2{font-size:20px;font-weight:700;color:var(--gray-800)}
+.modal-close{width:32px;height:32px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gray-500);transition:var(--transition);font-size:18px}
+.modal-close:hover{background:var(--gray-200);color:var(--gray-700)}
+.modal-body{display:flex;flex-direction:column;gap:16px;overflow-y:auto;flex:1;padding-right:4px}
+.modal-footer{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;padding-top:16px;border-top:1px solid var(--gray-100);flex-shrink:0}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:14px;font-weight:500;color:var(--gray-700)}
+.form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;transition:var(--transition);background:#fff;color:var(--gray-800);width:100%}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--orange-400);box-shadow:0 0 0 3px rgba(250,182,149,.2)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group .hint{font-size:12px;color:var(--gray-400);margin-top:2px}
+
+#banner{
+  background:linear-gradient(135deg,var(--orange-200),var(--orange-300),var(--orange-100));
+  padding:48px 24px 36px;text-align:center;position:relative;overflow:hidden;min-height:200px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  backdrop-filter:blur(10px);
+}
+#banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 80%,rgba(255,255,255,.7) 0%,transparent 60%),
+             radial-gradient(circle at 80% 20%,rgba(255,255,255,.5) 0%,transparent 50%);
+  pointer-events:none;
+}
+#banner::after{
+  content:'';position:absolute;inset:0;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  background:rgba(255,247,237,.3);
+  pointer-events:none;
+}
+#banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#banner-img.hidden{display:none}
+#banner-content{position:relative;z-index:2}
+#banner h1{font-size:clamp(28px,5vw,48px);font-weight:900;color:var(--orange-800);letter-spacing:4px;text-shadow:0 2px 8px rgba(0,0,0,.08);font-family:'Noto Serif TC',serif}
+#banner p{font-size:clamp(14px,2vw,18px);color:var(--orange-700);margin-top:8px;font-weight:400;opacity:.85}
+#logo-img{position:absolute;top:8px;left:8px;height:32px;width:auto;z-index:5;opacity:.9}
+
+#activity-bar{
+  background:rgba(224,122,79,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:#fff;padding:10px 24px;overflow:hidden;white-space:nowrap;
+  font-size:14px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+#activity-bar .label{background:rgba(255,255,255,.2);padding:2px 10px;border-radius:4px;font-weight:500;font-size:12px;flex-shrink:0}
+#activity-bar .content{overflow:hidden;position:relative;flex:1}
+#activity-bar .scroll-text{display:inline-block;animation:scrollText 25s linear infinite;white-space:nowrap}
+@keyframes scrollText{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+#campus-bar{
+  background:rgba(255,255,255,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:16px 24px;box-shadow:0 4px 20px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,.5);
+}
+#campus-bar .campus-label{font-weight:700;font-size:15px;color:var(--gray-700);white-space:nowrap}
+.campus-selector{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.campus-btn{
+  padding:8px 18px;border:1.5px solid var(--orange-200);border-radius:20px;background:#fff;
+  color:var(--gray-600);cursor:pointer;font-size:14px;font-weight:500;transition:var(--transition);font-family:inherit;
+}
+.campus-btn:hover{border-color:var(--orange-400);color:var(--orange-600);background:var(--orange-50)}
+.campus-btn.active{background:var(--orange-500);color:#fff;border-color:var(--orange-500);box-shadow:0 2px 8px rgba(245,158,122,.3)}
+
+#filter-bar{
+  background:rgba(255,255,255,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.4);
+}
+#filter-bar select{
+  padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);
+  font-size:13px;background:#fff;color:var(--gray-700);font-family:inherit;cursor:pointer;
+}
+#filter-bar select:focus{outline:none;border-color:var(--orange-400)}
+#filter-bar .filter-label{font-size:13px;color:var(--gray-500);font-weight:500}
+
+#course-section{max-width:1200px;margin:0 auto;padding:24px}
+#course-section .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+#course-section .section-header h2{font-size:20px;font-weight:700;color:var(--gray-800)}
+#course-section .section-header .count{font-size:14px;color:var(--gray-400);font-weight:400}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+
+.course-card{
+  background:rgba(255,255,255,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:var(--radius);padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.04);
+  transition:var(--transition);border:1px solid rgba(255,255,255,.5);position:relative;display:flex;flex-direction:column;
+}
+.course-card:hover{box-shadow:0 8px 24px rgba(245,158,122,.15);transform:translateY(-2px);border-color:rgba(245,158,122,.3)}
+.course-card .card-badge{position:absolute;top:12px;right:12px;background:var(--orange-500);color:#fff;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500}
+.course-card .card-badge.hot{background:#EF4444}
+.course-card h3{font-size:17px;font-weight:700;color:var(--gray-800);margin-bottom:6px}
+.course-card .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.course-card .meta span{font-size:13px;color:var(--gray-500);background:var(--orange-50);padding:3px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px}
+.course-card .meta span.weekday{background:#F0F9FF;color:#0369A1}
+.course-card .meta span.time{background:#F0FDF4;color:#15803D}
+.course-card .meta span.grade{background:#FFF7ED;color:var(--orange-700)}
+.course-card .progress-area{margin:12px 0 4px}
+.course-card .progress-bar{height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden}
+.course-card .progress-bar .fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--orange-400),var(--orange-500));transition:width .6s ease}
+.course-card .progress-text{display:flex;justify-content:space-between;font-size:13px;color:var(--gray-500);margin-top:4px}
+.course-card .progress-text .num{font-weight:600;color:var(--gray-700)}
+.course-card .card-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.5)}
+.course-card .card-actions .btn{flex:1}
+.course-card .card-notes{font-size:13px;color:var(--gray-400);margin-top:8px;font-style:italic}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray-400)}
+.empty-state .icon{font-size:48px;margin-bottom:12px;opacity:.5}
+.empty-state h3{font-size:18px;color:var(--gray-600);margin-bottom:8px}
+.empty-state p{font-size:14px}
+
+#fab-add{
+  position:fixed;bottom:80px;right:24px;width:52px;height:52px;border-radius:50%;
+  background:rgba(245,158,122,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:#fff;border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(245,158,122,.3);display:flex;align-items:center;justify-content:center;
+  font-size:26px;transition:var(--transition);z-index:99;
+}
+#fab-add:hover{transform:scale(1.1);background:rgba(224,122,79,.9)}
+
+#teacher-panel{
+  position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100vh;
+  background:#fff;box-shadow:var(--shadow-xl);z-index:1001;
+  transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+}
+#teacher-panel.open{right:0}
+#teacher-panel .panel-header{background:var(--orange-500);color:#fff;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#teacher-panel .panel-header h2{font-size:18px;font-weight:700}
+#teacher-panel .panel-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+#teacher-panel .panel-close:hover{background:rgba(255,255,255,.3)}
+#teacher-panel .panel-nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--gray-100);flex-shrink:0;background:var(--gray-50)}
+#teacher-panel .panel-nav button{
+  padding:14px 16px;border:none;background:transparent;font-size:12px;font-weight:500;
+  color:var(--gray-500);cursor:pointer;transition:var(--transition);white-space:nowrap;
+  font-family:inherit;border-bottom:2px solid transparent;
+}
+#teacher-panel .panel-nav button:hover{color:var(--orange-600);background:var(--orange-50)}
+#teacher-panel .panel-nav button.active{color:var(--orange-600);border-bottom-color:var(--orange-500)}
+#teacher-panel .panel-body{flex:1;overflow-y:auto;padding:20px 24px}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--orange-50);border-radius:var(--radius-sm);padding:16px;text-align:center}
+.stat-card .num{font-size:28px;font-weight:900;color:var(--orange-600)}
+.stat-card .label{font-size:13px;color:var(--gray-500);margin-top:4px}
+
+#tree-hole-section{max-width:800px;margin:0 auto 80px;padding:24px}
+#tree-hole-section .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+#tree-hole-section .section-header h2{font-size:20px;font-weight:700;color:var(--gray-800)}
+.post-list{display:flex;flex-direction:column;gap:12px}
+.post-card{background:rgba(255,255,255,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:var(--radius);padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,.04);border:1px solid rgba(255,255,255,.5)}
+.post-card .post-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.post-card .post-author{display:flex;align-items:center;gap:8px}
+.post-card .post-author .avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.post-card .post-author .name{font-size:13px;color:var(--gray-500);font-weight:500}
+.post-card .post-time{font-size:12px;color:var(--gray-400)}
+.post-card .post-content{font-size:15px;color:var(--gray-700);line-height:1.7}
+.post-card .post-actions{display:flex;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #f0e8e0}
+.post-card .post-actions .action-btn{cursor:pointer;display:flex;align-items:center;gap:4px;color:var(--gray-500);transition:color .2s;background:none;border:none;padding:4px 10px;border-radius:6px;font-size:13px}
+.post-card .post-actions .action-btn:hover{color:#E8734A;background:#FFF5F0}
+.post-card .post-actions .action-btn .count{font-weight:500}
+.post-comments{margin-top:10px;padding-top:10px;border-top:1px solid #f0e8e0;display:none}
+.post-comments.open{display:block}
+.post-comments .comment-item{padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:14px}
+.post-comments .comment-item:last-child{border-bottom:none}
+.post-comments .comment-item .comment-meta{display:flex;gap:8px;align-items:center;margin-bottom:2px}
+.post-comments .comment-item .comment-author{font-size:12px;color:var(--gray-500);font-weight:500}
+.post-comments .comment-item .comment-time{font-size:11px;color:var(--gray-400)}
+.post-comments .comment-item .comment-content{color:var(--gray-700)}
+.comment-form{display:flex;gap:8px;margin-top:10px}
+.comment-form input{flex:1;padding:8px 12px;border:1px solid #e0d5cc;border-radius:8px;font-size:14px;outline:none;background:white;font-family:inherit}
+.comment-form input:focus{border-color:#E8734A}
+.comment-form button{padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;white-space:nowrap}
+
+#toast-container{position:fixed;top:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:var(--radius-sm);color:#fff;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);animation:slideIn .3s ease,slideOut .3s ease 2.7s forwards;max-width:360px}
+.toast.success{background:#10B981}
+.toast.error{background:#EF4444}
+.toast.info{background:var(--orange-500)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{opacity:1}to{opacity:0;transform:translateX(50%)}}
+
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:10px 12px;font-weight:600;color:var(--gray-600);border-bottom:2px solid var(--gray-200);font-size:12px;letter-spacing:.5px}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+.data-table tr:hover td{background:var(--orange-50)}
+.table-wrap{overflow-x:auto}
+.checkbox-group{display:flex;flex-direction:column;gap:8px}
+.checkbox-item{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--gray-700);cursor:pointer}
+.checkbox-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--orange-500);cursor:pointer}
+
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page{display:none}
+.page.active{display:block}
+
+/* Bottom Navigation */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-around;
+  background:rgba(255,255,255,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.4);
+  box-shadow:0 -2px 20px rgba(0,0,0,.06);
+  padding:8px 0 env(safe-area-inset-bottom,8px);
+}
+.bottom-nav-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:transparent;border:none;cursor:pointer;
+  padding:10px 20px;border-radius:12px;
+  transition:all .2s ease;font-family:inherit;flex:1;max-width:120px;min-height:52px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.bottom-nav-btn:active{background:rgba(245,158,122,.2);transform:scale(.96)}
+.bottom-nav-btn .bn-icon{font-size:22px;line-height:1}
+.bottom-nav-btn .bn-label{font-size:12px;color:var(--gray-500);font-weight:500;transition:color .2s}
+.bottom-nav-btn.active .bn-label{color:var(--orange-600);font-weight:600}
+.bottom-nav-btn.active{background:rgba(245,158,122,.12)}
+
+@media(max-width:768px){
+  #banner{padding:32px 16px 28px;min-height:160px}
+  #banner h1{font-size:24px}
+  #campus-bar{padding:12px 16px;flex-direction:column;align-items:stretch}
+  #filter-bar{padding:10px 16px;overflow-x:auto;flex-wrap:nowrap}
+  .course-grid{grid-template-columns:1fr}
+  #teacher-panel{width:100vw}
+  .modal{padding:20px 16px}
+  .modal-body{gap:12px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  #fab-add{bottom:72px;right:16px;width:48px;height:48px;font-size:24px}
+  body{padding-bottom:60px}
+  .bottom-nav-btn{padding:8px 12px;min-width:50px;min-height:46px}
+  .bottom-nav-btn .bn-icon{font-size:20px}
+  .bottom-nav-btn .bn-label{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<div id="banner">
+ <img id="banner-img" class="hidden" src="" alt="海報">
+  <img id="logo-img" src="/logo.jpg" alt="學而思 Logo">
+ <div id="banner-content">
+    <h1>學而思新校區團課平台</h1>
+    <p>促團成班，讓我們傾聽您的聲音。</p>
+  </div>
+</div>
+
+<div id="activity-bar" class="hidden">
+  <span class="label">最新活動</span>
+  <div class="content"><span class="scroll-text" id="activity-text"></span></div>
+</div>
+
+<div id="campus-bar">
+  <span class="campus-label">🏫 選擇校區</span>
+  <div class="campus-selector" id="campus-selector"></div>
+</div>
+
+<div id="filter-bar">
+  <span class="filter-label">篩選</span>
+  <select id="filter-grade"><option value="">全部年級</option></select>
+  <select id="filter-weekday"><option value="">全部星期</option></select>
+  <select id="filter-time"><option value="">全部時段</option></select>
+  <button class="btn btn-ghost btn-sm" onclick="resetFilters()">重置</button>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:16px 24px 0"></div>
+
+<div id="page-courses" class="page active">
+  <section id="course-section" style="display:block;animation:pageIn .35s ease">
+    <div class="section-header">
+      <h2>可團課程 <span class="count" id="course-count"></span></h2>
+      <button class="btn btn-primary" onclick="openAddCourseModal()">＋ 新增心儀時段</button>
+    </div>
+    <div id="course-grid" class="course-grid"></div>
+  </section>
+</div>
+
+<div id="page-treehole" class="page">
+  <section id="tree-hole-section" style="animation:pageIn .35s ease">
+    <div class="section-header">
+      <h2>🌳 家長樹洞</h2>
+      <button class="btn btn-primary" onclick="openAddPostModal()">✏️ 發佈匿名帖子</button>
+    </div>
+    <p style="color:var(--gray-400);font-size:14px;margin-bottom:20px;">匿名發帖，自由交流。請友善發言 🤫</p>
+    <div id="post-list" class="post-list"></div>
+  </section>
+</div>
+
+<button id="fab-add" onclick="openAddCourseModal()" title="新增心儀時段">＋</button>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>教師登入</h2>
+      <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>帳號</label>
+        <input type="text" id="login-username" placeholder="請輸入教師帳號">
+      </div>
+      <div class="form-group">
+        <label>密碼</label>
+        <input type="password" id="login-password" placeholder="請輸入密碼" onkeydown="if(event.key==='Enter')handleLogin()">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('login-modal')">取消</button>
+      <button class="btn btn-primary" onclick="handleLogin()">登入</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Course Modal -->
+<div class="modal-overlay" id="add-course-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>新增心儀時段</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="submitAddCourse()">提交意願</button>
+        <button class="modal-close" onclick="closeModal('add-course-modal')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>所屬校區</label>
+        <select id="ac-campus"></select>
+      </div>
+      <div class="form-group">
+        <label>年級</label>
+        <select id="ac-grade">
+          <option value="K1">K1</option><option value="K2">K2</option><option value="K3">K3</option>
+          <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+          <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+          <option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option><option value="S4">S4</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>學科</label>
+        <select id="ac-subject">
+          <option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>星期</label>
+        <select id="ac-weekday"><option value="週二">週二</option><option value="週三">週三</option>
+          <option value="週四">週四</option><option value="週五">週五</option><option value="週六">週六</option><option value="週日">週日</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>時間段</label>
+        <select id="ac-time">
+          <option value="上午（0830-1200）">上午（0830-1200）</option><option value="下午（1300-1700）">下午（1300-1700）</option>
+          <option value="夜晚（1700之後）">夜晚（1700之後）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>您的電話號碼（請務必使用真實電話，後續團課成功方便工作人員聯絡您）</label>
+        <input type="tel" id="ac-phone" placeholder="請輸入8位香港電話">
+      </div>
+      <div class="form-group">
+        <label>學生姓名</label>
+        <input type="text" id="ac-name" placeholder="請輸入學生姓名">
+      </div>
+      <div class="form-group">
+        <label>授課老師</label>
+        <input type="text" id="ac-teacher" placeholder="請輸入授課老師姓名（可選）">
+      </div>
+
+      <div class="form-group">
+        <label>備註</label>
+        <textarea id="ac-notes" placeholder="其他想說的話…（可選）"></textarea>
+      </div>
+      <div id="ac-duplicate-warning" class="hidden" style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:12px;font-size:13px;color:#991B1B">
+        ⚠️ 相同課程已在火熱團課中，可以直接在列表中加入。
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>報名團課</h2>
+      <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="reg-course-info" style="background:var(--orange-50);border-radius:8px;padding:12px;font-size:14px;margin-bottom:8px"></div>
+      <div class="form-group">
+        <label>您的電話號碼（請務必使用真實電話，後續團課成功方便工作人員聯絡您）</label>
+        <input type="tel" id="reg-phone" placeholder="請輸入8位香港電話">
+      </div>
+      <div class="form-group">
+        <label>學生姓名</label>
+        <input type="text" id="reg-name" placeholder="請輸入學生姓名">
+      </div>
+      <div class="form-group">
+        <label>備註</label>
+        <textarea id="reg-notes" placeholder="其他想說的話…（可選）"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('register-modal')">取消</button>
+      <button class="btn btn-primary" onclick="submitRegistration()">確認報名</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post Modal -->
+<div class="modal-overlay" id="add-post-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🌳 發佈匿名帖子</h2>
+      <button class="modal-close" onclick="closeModal('add-post-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>您的匿名暱稱</label>
+        <input type="text" id="ap-nickname" placeholder="例如：東區家長、小五媽媽" maxlength="12">
+      </div>
+      <div class="form-group">
+        <label>帖子內容</label>
+        <textarea id="ap-content" placeholder="說說您的想法、疑問或心得…" style="min-height:120px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('add-post-modal')">取消</button>
+      <button class="btn btn-primary" onclick="submitPost()">匿名發佈</button>
+    </div>
+  </div>
+</div>
+
+<!-- Teacher Panel -->
+<div id="teacher-panel">
+  <div class="panel-header">
+    <h2>🔧 教師後台</h2>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="font-size:13px;opacity:.9" id="panel-username"></span>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff" onclick="handleLogout()">登出</button>
+      <button class="panel-close" onclick="closeTeacherPanel()">✕</button>
+    </div>
+  </div>
+  <div class="panel-nav" id="panel-nav">
+    <button class="active" data-section="dashboard" onclick="switchPanel('dashboard')">📊 儀表板</button>
+    <button data-section="courses" onclick="switchPanel('courses')">📋 課程管理</button>
+    <button data-section="branches" onclick="switchPanel('branches')">🏫 校區管理</button>
+    <button data-section="banner" onclick="switchPanel('banner')">🖼️ 外觀設定</button>
+    <button data-section="activities" onclick="switchPanel('activities')">🎉 活動管理</button>
+    <button data-section="treehole" onclick="switchPanel('treehole')">🌳 樹洞管理</button>
+    <button data-section="export" onclick="switchPanel('export')">📥 數據導出</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<!-- Bottom Navigation -->
+<div id="bottom-nav">
+  <button class="bottom-nav-btn active" data-page="courses" onclick="switchPage('courses')">
+    <span class="bn-icon">📚</span>
+    <span class="bn-label">團課列表</span>
+  </button>
+  <button class="bottom-nav-btn" data-page="treehole" onclick="switchPage('treehole')">
+    <span class="bn-icon">🌳</span>
+    <span class="bn-label">家長樹洞</span>
+  </button>
+  <button class="bottom-nav-btn" onclick="openLoginModal()">
+    <span class="bn-icon">🔑</span>
+    <span class="bn-label">教師登入</span>
+  </button>
+</div>
+
+<script>
+const API = '/api';
+
+// ===== API Helpers =====
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  return res.json();
+}
+
+// ===== State =====
+let selectedCampus = '';
+let filterGrade = '', filterWeekday = '', filterTime = '';
+let currentTeacher = null;
+let registerCourseId = '';
+let settings = {};
+let campuses = [];
+let allCourses = [];
+let allRegistrations = [];
+
+// ===== Toast =====
+function showToast(msg, type = 'info') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== Modal =====
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function openLoginModal() { openModal('login-modal'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('active'); });
+});
+
+// ===== Banner =====
+function renderBanner() {
+  const h1 = document.querySelector('#banner h1');
+  const p = document.querySelector('#banner p');
+  const img = document.getElementById('banner-img');
+  h1.textContent = settings.bannerTitle || '學而思新校區團課平台';
+  p.textContent = settings.bannerSubtitle || '促團成班，讓我們傾聽您的聲音。';
+  if (settings.bannerImage) {
+    img.src = settings.bannerImage; img.classList.remove('hidden');
+    document.getElementById('banner').style.background = '#000';
+    h1.style.color = '#fff'; h1.style.textShadow = '0 2px 8px rgba(0,0,0,.5)';
+    p.style.color = 'rgba(255,255,255,.85)';
+  } else {
+    img.classList.add('hidden'); document.getElementById('banner').style.background = '';
+    h1.style.color = ''; h1.style.textShadow = ''; p.style.color = '';
+  }
+}
+
+// ===== Activities =====
+async function renderActivities() {
+  const bar = document.getElementById('activity-bar');
+  const text = document.getElementById('activity-text');
+  const activities = await api('GET', '/activities');
+  if (activities.length === 0) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  text.textContent = activities.map(a => '【' + a.title + '】' + a.content).join('  ·  ');
+}
+
+// ===== Campuses =====
+async function loadCampuses() {
+  campuses = await api('GET', '/campuses');
+  if (campuses.length > 0 && !selectedCampus) selectedCampus = campuses[0].id;
+  renderCampusSelector();
+}
+
+function renderCampusSelector() {
+  const el = document.getElementById('campus-selector');
+  el.innerHTML = '';
+  campuses.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'campus-btn' + (c.id === selectedCampus ? ' active' : '');
+    btn.textContent = c.name;
+    btn.onclick = () => { selectedCampus = c.id; renderCampusSelector(); loadAndRenderCourses(); renderFilters(); };
+    el.appendChild(btn);
+  });
+}
+
+// ===== Filters =====
+function renderFilters() {
+  const gSel = document.getElementById('filter-grade');
+  const wSel = document.getElementById('filter-weekday');
+  const tSel = document.getElementById('filter-time');
+  const courses = allCourses.filter(c => c.campus_id === selectedCampus);
+  const grades = [...new Set(courses.map(c => c.grade))].sort();
+  const weekdays = ['週二','週三','週四','週五','週六','週日'];
+  const times = ['上午（0830-1200）','下午（1300-1700）','夜晚（1700之後）'];
+  const curG = gSel.value;
+  gSel.innerHTML = '<option value="">全部年級</option>' + grades.map(g => '<option value="' + g + '">' + g + '</option>').join('');
+  if (grades.includes(curG)) gSel.value = curG; else gSel.value = '';
+  const curW = wSel.value;
+  wSel.innerHTML = '<option value="">全部星期</option>' + weekdays.map(w => '<option value="' + w + '">' + w + '</option>').join('');
+  if (weekdays.includes(curW)) wSel.value = curW; else wSel.value = '';
+  const curT = tSel.value;
+  tSel.innerHTML = '<option value="">全部時段</option>' + times.map(t => '<option value="' + t + '">' + t + '</option>').join('');
+  if (times.includes(curT)) tSel.value = curT; else tSel.value = '';
+  gSel.onchange = () => { filterGrade = gSel.value; renderCourses(); };
+  wSel.onchange = () => { filterWeekday = wSel.value; renderCourses(); };
+  tSel.onchange = () => { filterTime = tSel.value; renderCourses(); };
+}
+
+function resetFilters() {
+  filterGrade = ''; filterWeekday = ''; filterTime = '';
+  document.getElementById('filter-grade').value = '';
+  document.getElementById('filter-weekday').value = '';
+  document.getElementById('filter-time').value = '';
+  renderCourses();
+}
+
+// ===== Courses =====
+async function loadAndRenderCourses() {
+  allCourses = await api('GET', '/courses');
+  allRegistrations = await api('GET', '/registrations');
+  renderFilters();
+  renderCourses();
+}
+
+function getRegsForCourse(courseId) {
+  return allRegistrations.filter(r => r.course_id === courseId);
+}
+
+function renderCourses() {
+  const grid = document.getElementById('course-grid');
+  const count = document.getElementById('course-count');
+  let courses = allCourses.filter(c => c.campus_id === selectedCampus);
+  if (filterGrade) courses = courses.filter(c => c.grade === filterGrade);
+  if (filterWeekday) courses = courses.filter(c => c.weekday === filterWeekday);
+  if (filterTime) courses = courses.filter(c => c.time_slot === filterTime);
+  count.textContent = '（共 ' + courses.length + ' 個時段）';
+  if (courses.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="icon">📭</div><h3>暫無團課</h3><p>目前該校區還沒有團課項目，點擊下方「＋」按鈕新增您心儀的時段吧！</p></div>';
+    return;
+  }
+  grid.innerHTML = courses.map(c => {
+    const regs = getRegsForCourse(c.id);
+    const regCount = regs.length;
+    const min = c.min_count || parseInt(settings.courseMinCount) || 8;
+        const maxCap = c.max_capacity || 20;
+    const pct = Math.min(100, Math.round(regCount / min * 100));
+    return '<div class="course-card" data-id="' + c.id + '">' +
+      '<div class="card-badge' + (pct >= 100 ? ' hot' : '') + '">' + (pct >= 100 ? '🔥 已成班 ' : '團課中') + '</div>' +
+      '<h3>' + c.grade + ' · ' + c.weekday + ' ' + c.time_slot + '</h3>' +
+      '<div class="meta">' +
+        '<span class="grade">📖 ' + c.grade + '</span>' +
+        '<span class="weekday">📅 ' + c.weekday + '</span>' +
+        '<span class="time">⏰ ' + c.time_slot + '</span>' +
+        (c.subject ? '<span>📘 ' + c.subject + '</span>' : '') +
+        (c.notes ? '<span>📌 ' + c.notes + '</span>' : '') +
+        (c.teacher_name ? '<span>👩‍🏫 ' + c.teacher_name + '</span>' : '') +
+      '</div>' +
+      '<div class="progress-area">' +
+        '<div class="progress-bar"><div class="fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="progress-text">' +
+          '<span>已團 <span class="num">' + regCount + '</span> / <span class="num">' + maxCap + '</span> 人</span>' +
+          '<span>目標 <span class="num">' + min + '</span> 人' + (pct >= 100 ? ' ✅ 已達成！' : '（' + (min - regCount) + ' 人可成班）') + '</span>' +
+        '</div>' +
+      '</div>' +
+      (c.notes ? '<div class="card-notes">💬 ' + c.notes + '</div>' : '') +
+      '<div class="card-actions">' +
+        '<button class="btn btn-primary btn-sm" onclick="openRegisterModal(\'' + c.id + '\')">✋ 我要團</button>' +
+        '<button class="btn btn-outline btn-sm" onclick="showCourseDetail(\'' + c.id + '\')">👥 看看誰</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+async function showCourseDetail(courseId) {
+  const c = allCourses.find(x => x.id === courseId);
+  if (!c) return;
+  const allRegs = await api('GET', '/registrations?courseId=' + courseId);
+  const campus = campuses.find(ca => ca.id === c.campus_id);
+  const min = c.min_count || parseInt(settings.courseMinCount) || 8;
+  const pct = Math.min(100, Math.round(allRegs.length / min * 100));
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay active';
+  overlay.innerHTML = '<div class="modal" style="max-width:480px">' +
+    '<div class="modal-header"><h2>👥 團課詳情</h2><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">✕</button></div>' +
+    '<div class="modal-body">' +
+      '<div style="background:var(--orange-50);border-radius:8px;padding:14px">' +
+        '<p><strong>' + (campus ? campus.name : '') + '</strong> · ' + c.grade + ' · ' + c.weekday + ' ' + c.time_slot + '</p>' +
+        (c.notes ? '<p style="font-size:13px;color:var(--gray-500);margin-top:4px">' + c.notes + '</p>' : '') +
+        '<div class="progress-bar" style="margin-top:10px"><div class="fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="progress-text" style="font-size:13px;margin-top:4px">' +
+          '<span>已團 <strong>' + allRegs.length + '</strong> 人</span>' +
+          '<span>目標 <strong>' + min + '</strong> 人</span>' +
+        '</div></div>' +
+      '<div><h4 style="font-size:14px;font-weight:600;margin-bottom:8px;color:var(--gray-700)">已報名家長（' + allRegs.length + ' 人）</h4>' +
+        (allRegs.length === 0 ? '<p style="font-size:13px;color:var(--gray-400)">暫無報名</p>' :
+          allRegs.map(r => '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:14px">' +
+            '<span>👤 ' + r.student_name + '</span>' +
+            '<span style="color:var(--gray-400);font-size:12px">' + new Date(r.created_at).toLocaleDateString('zh-Hant') + '</span></div>').join('')) +
+      '</div></div>' +
+    '<div class="modal-footer">' +
+      '<button class="btn btn-primary" onclick="this.closest(\'.modal-overlay\').remove();openRegisterModal(\'' + courseId + '\')">✋ 我也要團</button>' +
+      '<button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">關閉</button>' +
+    '</div></div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+function checkDuplicateInForm() {
+  const campusId = document.getElementById('ac-campus').value;
+  const grade = document.getElementById('ac-grade').value;
+  const subject = document.getElementById('ac-subject').value;
+  const weekday = document.getElementById('ac-weekday').value;
+  const timeSlot = document.getElementById('ac-time').value;
+  const dup = allCourses.find(c => c.campus_id === campusId && c.grade === grade && c.weekday === weekday && c.time_slot === timeSlot && (!c.subject || c.subject === subject));
+  const el = document.getElementById('ac-duplicate-warning');
+  if (dup) {
+    el.classList.remove('hidden');
+  } else {
+    el.classList.add('hidden');
+  }
+}
+
+async function openAddCourseModal() {
+  const sel = document.getElementById('ac-campus');
+  sel.innerHTML = campuses.map(c => '<option value="' + c.id + '"' + (c.id === selectedCampus ? ' selected' : '') + '>' + c.name + '</option>').join('');
+  document.getElementById('ac-phone').value = '';
+  document.getElementById('ac-name').value = '';
+  document.getElementById('ac-notes').value = '';
+  document.getElementById('ac-duplicate-warning').classList.add('hidden');
+  // Add real-time duplicate check
+  ['ac-campus','ac-grade','ac-subject','ac-weekday','ac-time'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', checkDuplicateInForm);
+    }
+  });
+  setTimeout(checkDuplicateInForm, 50);
+  openModal('add-course-modal');
+}
+
+async function submitAddCourse() {
+  const campusId = document.getElementById('ac-campus').value;
+  const grade = document.getElementById('ac-grade').value;
+  const weekday = document.getElementById('ac-weekday').value;
+  const timeSlot = document.getElementById('ac-time').value;
+  const phone = document.getElementById('ac-phone').value.trim();
+  const studentName = document.getElementById('ac-name').value.trim();
+  const subject = document.getElementById('ac-subject').value;
+  const teacherName = document.getElementById('ac-teacher').value.trim();
+  const notes = document.getElementById('ac-notes').value.trim();
+  if (!phone) { showToast('請輸入手機號碼', 'error'); return; }
+  if (!studentName) { showToast('請輸入學生姓名', 'error'); return; }
+  if (!/^[2-9]\d{7}$/.test(phone)) { showToast('請輸入正確的8位香港電話號碼', 'error'); return; }
+
+  // Check duplicate
+  const dup = allCourses.find(c => c.campus_id === campusId && c.grade === grade && c.weekday === weekday && c.time_slot === timeSlot && (!c.subject || c.subject === subject));
+  if (dup) {
+    document.getElementById('ac-duplicate-warning').classList.remove('hidden');
+    showToast('該時段已有相同課程，請直接報名！', 'info');
+    return;
+  }
+
+  // Create course
+  const courseResult = await api('POST', '/courses', { campusId, grade, subject, weekday, timeSlot, notes, minCount: parseInt(settings.courseMinCount) || 8, teacherName, maxCapacity: 20 });
+  // Auto-register creator
+  await api('POST', '/registrations', { courseId: courseResult.id, phone, studentName });
+  closeModal('add-course-modal');
+  showToast('已成功新增時段並報名！🎉', 'success');
+  await loadAndRenderCourses();
+}
+
+function openRegisterModal(courseId) {
+  registerCourseId = courseId;
+  const c = allCourses.find(x => x.id === courseId);
+  if (!c) return;
+  const campus = campuses.find(ca => ca.id === c.campus_id);
+  document.getElementById('reg-course-info').innerHTML = '<strong>' + (campus ? campus.name : '') + '</strong> · ' + c.grade + ' · ' + c.weekday + ' ' + c.time_slot +
+    (c.notes ? '<br><span style="font-size:13px;color:var(--gray-500)">' + c.notes + '</span>' : '');
+  document.getElementById('reg-phone').value = '';
+  document.getElementById('reg-name').value = '';
+  document.getElementById('reg-notes').value = '';
+  openModal('register-modal');
+}
+
+async function submitRegistration() {
+  const phone = document.getElementById('reg-phone').value.trim();
+  const name = document.getElementById('reg-name').value.trim();
+  const notes = document.getElementById('reg-notes').value.trim();
+  if (!phone) { showToast('請輸入手機號碼', 'error'); return; }
+  if (!name) { showToast('請輸入學生姓名', 'error'); return; }
+  if (!/^[2-9]\d{7}$/.test(phone)) { showToast('請輸入正確的8位香港電話號碼', 'error'); return; }
+
+  const result = await api('POST', '/registrations', { courseId: registerCourseId, phone, studentName: name, notes });
+  if (!result.success) { showToast(result.message || '報名失敗', 'error'); closeModal('register-modal'); return; }
+  closeModal('register-modal');
+  showToast('報名成功！一起等待成班 🎉', 'success');
+  await loadAndRenderCourses();
+}
+
+// ===== Tree Hole =====
+async function renderPosts() {
+  const el = document.getElementById('post-list');
+  const posts = await api('GET', '/posts');
+  if (posts.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">🌳</div><h3>暫無帖子</h3><p>成為第一個發言的家長吧！</p></div>';
+    return;
+  }
+  el.innerHTML = posts.map(p => {
+    const colors = ['#F59E7A','#60A5FA','#34D399','#A78BFA','#F472B6','#FBBF24'];
+    const colorIdx = p.nickname ? p.nickname.charCodeAt(0) % colors.length : 0;
+    const date = new Date(p.created_at).toLocaleDateString('zh-Hant', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return '<div class="post-card" data-id="' + p.id + '">' +
+      '<div class="post-header">' +
+        '<div class="post-author">' +
+          '<div class="avatar" style="background:' + colors[colorIdx] + ';color:#fff">' + (p.nickname || '匿名')[0] + '</div>' +
+          '<span class="name">' + (p.nickname || '匿名家長') + '</span>' +
+          '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' +
+        '</div>' +
+        '<span class="post-time">' + date + '</span>' +
+      '</div>' +
+      '<div class="post-content">' + escapeHtml(p.content) + '</div>' +
+      '<div class="post-actions">' +
+        '<button class="action-btn" onclick="toggleLike(\'' + p.id + '\')">\u2764\ufe0f <span class="count" id="like-count-' + p.id + '">' + (p.likes || 0) + '</span></button>' +
+        '<button class="action-btn" onclick="toggleComments(\'' + p.id + '\')">\ud83d\udcac <span class="count">' + ((p.comments && p.comments.length) || 0) + '</span></button>' +
+      '</div>' +
+      '<div class="post-comments" id="comments-' + p.id + '">' +
+        '<div class="comments-list">' +
+          (p.comments && p.comments.length > 0 ? p.comments.map(function(c) {
+          var cdate = new Date(c.created_at).toLocaleString('zh-Hant', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+          return '<div class="comment-item">' +
+            '<div class="comment-meta">' +
+              '<span class="comment-author">' + escapeHtml(c.nickname || '\u533f\u540d\u5bb6\u957f') + '</span>' +
+              '<span class="comment-time">' + cdate + '</span>' +
+            '</div>' +
+            '<div class="comment-content">' + escapeHtml(c.content) + '</div>' +
+          '</div>';
+        }).join('') : '<p style="font-size:13px;color:var(--gray-400);padding:8px 0">暫無留言</p>') +
+        '</div>' +
+        '<div class="comment-form">' +
+          '<input type="text" id="comment-input-' + p.id + '" placeholder="寫下你的留言..." onkeydown="if(event.key===\'Enter\')submitComment(\'' + p.id + '\')">' +
+          '<button onclick="submitComment(\'' + p.id + '\')">發送</button>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+async function toggleLike(postId) {
+  const result = await api('POST', '/posts/' + postId + '/like');
+  if (result.success) {
+    document.getElementById('like-count-' + postId).textContent = result.likes;
+  }
+}
+
+function toggleComments(postId) {
+  const el = document.getElementById('comments-' + postId);
+  el.classList.toggle('open');
+}
+
+async function submitComment(postId) {
+  const input = document.getElementById('comment-input-' + postId);
+  const content = input.value.trim();
+  if (!content) { showToast('請輸入留言內容', 'error'); return; }
+  await api('POST', '/posts/' + postId + '/comment', { content });
+  input.value = '';
+  showToast('留言已發送 💬', 'success');
+  await renderPosts();
+}
+
+function showConfirmModal(message) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay active';
+    overlay.style.zIndex = '2001';
+    overlay.innerHTML = '<div class="modal" style="max-width:380px">' +
+      '<div class="modal-header"><h2>\u78ba\u8a8d</h2></div>' +
+      '<div class="modal-body"><p style="font-size:15px;color:var(--gray-600)">' + escapeHtml(message) + '</p></div>' +
+      '<div class="modal-footer" style="display:flex;gap:8px">' +
+        '<button class="btn btn-secondary" id="_c_no">\u53d6\u6d88</button>' +
+        '<button class="btn btn-primary" id="_c_yes">\u78ba\u5b9a</button>' +
+      '</div></div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('#_c_no').onclick = () => { overlay.remove(); resolve(false); };
+    overlay.querySelector('#_c_yes').onclick = () => { overlay.remove(); resolve(true); };
+    overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); resolve(false); } });
+  });
+}
+
+function showPromptModal(title, defaultValue) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay active';
+    overlay.style.zIndex = '2001';
+    overlay.innerHTML = '<div class="modal" style="max-width:400px">' +
+      '<div class="modal-header"><h2>' + escapeHtml(title) + '</h2></div>' +
+      '<div class="modal-body">' +
+        '<input type="text" id="_p_inp" value="' + escapeHtml(defaultValue || '') + '" style="width:100%;padding:10px 12px;border:1px solid #e0d5cc;border-radius:8px;font-size:15px;outline:none;font-family:inherit">' +
+      '</div>' +
+      '<div class="modal-footer" style="display:flex;gap:8px">' +
+        '<button class="btn btn-secondary" id="_p_no">\u53d6\u6d88</button>' +
+        '<button class="btn btn-primary" id="_p_yes">\u78ba\u5b9a</button>' +
+      '</div></div>';
+    document.body.appendChild(overlay);
+    setTimeout(() => { const inp = document.getElementById('_p_inp'); if (inp) inp.focus(); }, 100);
+    overlay.querySelector('#_p_yes').onclick = () => { const v = overlay.querySelector('#_p_inp').value; overlay.remove(); resolve(v); };
+    overlay.querySelector('#_p_no').onclick = () => { overlay.remove(); resolve(null); };
+    const inp2 = overlay.querySelector('#_p_inp');
+    inp2.onkeydown = e => { if (e.key === 'Enter') { overlay.remove(); resolve(inp2.value); } };
+    overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); resolve(null); } });
+  });
+}
+
+function openAddPostModal() {
+  document.getElementById('ap-nickname').value = '';
+  document.getElementById('ap-content').value = '';
+  openModal('add-post-modal');
+}
+
+async function submitPost() {
+  const nickname = document.getElementById('ap-nickname').value.trim() || '匿名家長';
+  const content = document.getElementById('ap-content').value.trim();
+  if (!content) { showToast('請輸入帖子內容', 'error'); return; }
+  await api('POST', '/posts', { nickname, content });
+  closeModal('add-post-modal');
+  showToast('發佈成功！🌳', 'success');
+  await renderPosts();
+}
+
+// ===== Page Switching =====
+function switchPage(page) {
+  document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
+  if (page === 'treehole') renderPosts();
+ document.getElementById('fab-add').classList.toggle('hidden', page !== 'courses');
+ document.getElementById('filter-bar').classList.toggle('hidden', page !== 'courses');
+  document.getElementById('campus-bar').classList.toggle('hidden', page !== 'courses');
+}
+
+// ===== Auth =====
+async function handleLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  const result = await api('POST', '/auth/login', { username, password });
+  if (!result.success) { showToast('帳號或密碼錯誤', 'error'); return; }
+  currentTeacher = result;
+  closeModal('login-modal');
+  document.getElementById('panel-username').textContent = result.name;
+  document.getElementById('teacher-panel').classList.add('open');
+  switchPanel('dashboard');
+  showToast('歡迎回來，' + result.name + '！', 'success');
+}
+
+function handleLogout() { currentTeacher = null; closeTeacherPanel(); showToast('已登出', 'info'); }
+function closeTeacherPanel() { document.getElementById('teacher-panel').classList.remove('open'); }
+
+// ===== Teacher Panel =====
+function switchPanel(section) {
+  document.querySelectorAll('#panel-nav button').forEach(b => b.classList.toggle('active', b.dataset.section === section));
+  const body = document.getElementById('panel-body');
+  switch (section) {
+    case 'dashboard': renderDashboard(body); break;
+    case 'courses': renderTeacherCourses(body); break;
+    case 'branches': renderBranches(body); break;
+    case 'banner': renderBannerSettings(body); break;
+    case 'activities': renderActivitiesSettings(body); break;
+    case 'treehole': renderTreeholeManage(body); break;
+    case 'export': renderExport(body); break;
+  }
+}
+
+// ----- Dashboard -----
+function renderDashboard(body) {
+  const totalCampuses = campuses.length;
+  const totalCourses = allCourses.length;
+  const totalRegs = allRegistrations.length;
+  body.innerHTML = '<h3>📊 團課數據總覽</h3>' +
+    '<div class="stats-grid">' +
+      '<div class="stat-card"><div class="num">' + totalCampuses + '</div><div class="label">校區</div></div>' +
+      '<div class="stat-card"><div class="num">' + totalCourses + '</div><div class="label">團課時段</div></div>' +
+      '<div class="stat-card"><div class="num">' + totalRegs + '</div><div class="label">報名家長</div></div>' +
+      '<div class="stat-card"><div class="num">' + totalCourses + '</div><div class="label">樹洞帖子</div></div>' +
+    '</div>' +
+    '<h3 style="margin-top:20px">各校區概覽</h3>' +
+    '<div class="table-wrap"><table class="data-table">' +
+      '<thead><tr><th>校區</th><th>團課數</th><th>報名人數</th></tr></thead><tbody>' +
+      campuses.map(c => {
+        const cCourses = allCourses.filter(co => co.campus_id === c.id);
+        const cRegs = cCourses.reduce((s, co) => s + getRegsForCourse(co.id).length, 0);
+        return '<tr><td>' + c.name + '</td><td>' + cCourses.length + '</td><td>' + cRegs + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div>' +
+    '<h3 style="margin-top:20px">🕒 最新報名動態</h3>' +
+    '<div style="max-height:200px;overflow-y:auto">' +
+      [...allRegistrations].sort((a, b) => b.created_at - a.created_at).slice(0, 10).map(r => {
+        const c = allCourses.find(co => co.id === r.course_id);
+        const campus = c ? campuses.find(ca => ca.id === c.campus_id) : null;
+        const time = new Date(r.created_at).toLocaleString('zh-Hant');
+        return '<div style="padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px">' +
+          '<strong>' + r.student_name + '</strong> 報名了 ' + (campus ? campus.name : '') + ' ' + (c ? c.grade + ' · ' + c.weekday + ' ' + c.time_slot : '') +
+          '<span style="color:var(--gray-400);float:right">' + time + '</span></div>';
+      }).join('') +
+    '</div>';
+}
+
+// ----- Teacher Courses -----
+function renderTeacherCourses(body) {
+  body.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<h3 style="margin:0">📋 課程管理</h3>' +
+    '<button class="btn btn-primary btn-sm" onclick="teacherAddCourse()">＋ 新增課程</button></div>' +
+    '<div class="table-wrap"><table class="data-table">' +
+    '<thead><tr><th>校區</th><th>年級</th><th>學科</th><th>星期</th><th>時段</th><th>授課老師</th><th>容量</th><th>備註</th><th>已團/目標</th><th>操作</th></tr></thead><tbody>' +
+    allCourses.map(c => {
+      const campus = campuses.find(ca => ca.id === c.campus_id);
+      const regs = getRegsForCourse(c.id);
+      return '<tr><td>' + (campus ? campus.name : '-') + '</td><td>' + c.grade + '</td><td>' + (c.subject || '-') + '</td><td>' + c.weekday + '</td><td>' + c.time_slot + '</td>' +
+        '<td>' + (c.teacher_name || '-') + '</td>' +
+        '<td>' + (c.max_capacity || 20) + '</td>' +
+        '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (c.notes || '-') + '</td>' +
+        '<td>' + regs.length + ' / ' + (c.min_count || parseInt(settings.courseMinCount) || 8) + '</td>' +
+        '<td><button class="btn btn-outline btn-sm" onclick="teacherEditCourse(\'' + c.id + '\')">編輯</button> <button class="btn btn-danger btn-sm" onclick="teacherDeleteCourse(\'' + c.id + '\')">刪除</button></td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function teacherAddCourse() {
+  const body = document.getElementById('panel-body');
+  body.innerHTML = '<h3>＋ 新增課程</h3>' +
+    '<div class="modal-body" style="padding:0;margin-top:12px">' +
+      '<div class="form-group"><label>校區</label><select id="tc-campus">' + campuses.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K1','K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option>' + g + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>學科</label><select id="tc-subject"><option>數學</option><option>英語（僅限幼兒年級）</option></select></div>' +
+      '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option>' + w + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" placeholder="例如：08:30-11:00"></div>' +
+      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" placeholder="例如：張老師"></div>' +
+      '<div class="form-group"><label>班級容量</label><input type="number" id="tc-capacity" value="20" min="1" max="100"></div>' +
+      '<div class="form-group"><label>備註</label><input type="text" id="tc-notes" placeholder="例如：數學思維班"></div>' +
+      '<div class="form-group"><label>成班目標人數</label><input type="number" id="tc-min" value="' + (parseInt(settings.courseMinCount) || 8) + '" min="1"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:16px">' +
+      '<button class="btn btn-primary" onclick="teacherSubmitAddCourse()">確認新增</button>' +
+      '<button class="btn btn-secondary" onclick="switchPanel(\'courses\')">取消</button></div>';
+}
+
+async function teacherSubmitAddCourse() {
+  const campusId = document.getElementById('tc-campus').value;
+  const grade = document.getElementById('tc-grade').value;
+  const weekday = document.getElementById('tc-weekday').value;
+  const timeSlot = document.getElementById('tc-time').value;
+  const notes = document.getElementById('tc-notes').value.trim();
+  const min = parseInt(document.getElementById('tc-min').value) || parseInt(settings.courseMinCount) || 8;
+  const teacherName = document.getElementById('tc-teacher').value.trim();
+  const maxCapacity = parseInt(document.getElementById('tc-capacity').value) || 20;
+  const subject = document.getElementById('tc-subject').value;
+  await api('POST', '/courses', { campusId, grade, subject, weekday, timeSlot, notes, minCount: min, teacherName, maxCapacity });
+  showToast('課程新增成功！', 'success');
+  await loadAndRenderCourses();
+  switchPanel('courses');
+}
+
+async function teacherEditCourse(courseId) {
+  const c = allCourses.find(x => x.id === courseId);
+  if (!c) return;
+  const body = document.getElementById('panel-body');
+  body.innerHTML = '<h3>編輯課程</h3>' +
+    '<div class="modal-body" style="padding:0;margin-top:12px">' +
+      '<div class="form-group"><label>校區</label><select id="tc-campus">' + campuses.map(cc => '<option value="' + cc.id + '"' + (cc.id === c.campus_id ? ' selected' : '') + '>' + cc.name + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K1','K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option value="' + g + '"' + (g === c.grade ? ' selected' : '') + '>' + g + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>學科</label><select id="tc-subject"><option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option></select></div>' +
+      '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option value="' + w + '"' + (w === c.weekday ? ' selected' : '') + '>' + w + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" value="' + (c.time_slot || '') + '" placeholder="例如：08:30-11:00"></div>' +
+      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" value="' + (c.teacher_name || '') + '" placeholder="例如：張老師"></div>' +
+      '<div class="form-group"><label>班級容量</label><input type="number" id="tc-capacity" value="' + (c.max_capacity || 20) + '" min="1" max="100"></div>' +
+      '<div class="form-group"><label>備註</label><input type="text" id="tc-notes" value="' + (c.notes || '') + '"></div>' +
+      '<div class="form-group"><label>成班目標人數</label><input type="number" id="tc-min" value="' + (c.min_count || parseInt(settings.courseMinCount) || 8) + '" min="1"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:16px">' +
+      '<button class="btn btn-primary" onclick="teacherSubmitEditCourse(\'' + courseId + '\')">儲存課程</button>' +
+      '<button class="btn btn-secondary" onclick="switchPanel(\'courses\')">取消</button></div>';
+}
+
+async function teacherSubmitEditCourse(courseId) {
+  const campusId = document.getElementById('tc-campus').value;
+  const grade = document.getElementById('tc-grade').value;
+  const weekday = document.getElementById('tc-weekday').value;
+  const timeSlot = document.getElementById('tc-time').value;
+  const teacherName = document.getElementById('tc-teacher').value.trim();
+  const subject = document.getElementById('tc-subject').value;
+  const maxCapacity = parseInt(document.getElementById('tc-capacity').value) || 20;
+  const notes = document.getElementById('tc-notes').value.trim();
+  const min = parseInt(document.getElementById('tc-min').value) || parseInt(settings.courseMinCount) || 8;
+  await api('PUT', '/courses/' + courseId, { grade, subject, weekday, timeSlot, notes, minCount: min, teacherName, maxCapacity });
+  showToast('課程已更新！', 'success');
+  allCourses = await api('GET', '/courses');
+  allRegistrations = await api('GET', '/registrations');
+  switchPanel('courses');
+}
+
+async function teacherDeleteCourse(courseId) {
+  if (!confirm('確定要刪除這個課程嗎？相關的家長報名資料也將一併刪除。')) return;
+  await api('DELETE', '/courses/' + courseId);
+  showToast('課程已刪除', 'info');
+  await loadAndRenderCourses();
+  switchPanel('courses');
+}
+
+// ----- Branches -----
+function renderBranches(body) {
+  body.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3>🏫 校區管理</h3><button class="btn btn-primary" onclick="teacherAddBranch()">＋ 新增校區</button></div>' +
+    '<div class="branch-list">' +
+    campuses.map(c => '<div class="branch-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border:1px solid #e8d5c4;border-radius:8px;margin-bottom:8px">' +
+      '<div><strong>' + c.name + '</strong>' + (c.address ? '<span style="color:#888;font-size:13px;margin-left:8px">📍 ' + c.address + '</span>' : '') + '</div>' +
+      '<div style="display:flex;gap:6px">' +
+        '<button class="btn btn-sm btn-secondary" onclick="teacherEditBranch(\'' + c.id + '\')">✏️ 編輯</button>' +
+        '<button class="btn btn-sm btn-danger" onclick="teacherDeleteBranch(\'' + c.id + '\')">🗑️ 刪除</button>' +
+      '</div></div>').join('') +
+    '</div>';
+}
+async function teacherAddBranch() {
+  const name = await showPromptModal('請輸入新校區名稱');
+  if (!name || !name.trim()) return;
+  const address = await showPromptModal('請輸入校區地址（可選）');
+  await api('POST', '/campuses', { name: name.trim(), address: address || '' });
+  showToast('校區新增成功！', 'success');
+  campuses = await api('GET', '/campuses');
+  renderBranches(document.getElementById('panel-body'));
+  renderCampusSelector();
+}
+
+async function teacherEditBranch(id) {
+  const campus = campuses.find(c => c.id === id);
+  if (!campus) return;
+  const name = await showPromptModal('修改校區名稱', campus.name);
+  if (!name || !name.trim()) return;
+  const address = await showPromptModal('修改校區地址（可選）', campus.address || '');
+  await api('PUT', '/campuses/' + id, { name: name.trim(), address: address || '' });
+  showToast('校區已更新！', 'success');
+  campuses = await api('GET', '/campuses');
+  renderBranches(document.getElementById('panel-body'));
+  renderCampusSelector();
+}
+
+async function teacherDeleteBranch(id) {
+  const c = campuses.find(x => x.id === id);
+  if (!c) return;
+  const confirmed = await showConfirmModal('確定要刪除「' + c.name + '」嗎？該校區的所有課程也將被刪除。');
+  if (!confirmed) return;
+  await api('DELETE', '/campuses/' + id);
+  allCourses = await api('GET', '/courses');
+  allRegistrations = await api('GET', '/registrations');
+  campuses = await api('GET', '/campuses');
+  if (selectedCampus === id) selectedCampus = campuses.length > 0 ? campuses[0].id : '';
+  showToast('校區已刪除', 'info');
+  renderBranches(document.getElementById('panel-body'));
+  renderCampusSelector();
+  await loadAndRenderCourses();
+}
+
+// ----- Banner Settings -----
+function renderBannerSettings(body) {
+  body.innerHTML = '<h3>🖼️ 頁面外觀設定</h3>' +
+    '<div class="modal-body" style="padding:0">' +
+      '<div class="form-group"><label>主標題</label><input type="text" id="bs-title" value="' + escapeHtml(settings.bannerTitle) + '"></div>' +
+      '<div class="form-group"><label>副標題</label><input type="text" id="bs-subtitle" value="' + escapeHtml(settings.bannerSubtitle) + '"></div>' +
+      '<div class="form-group"><label>海報圖片</label><input type="file" id="bs-image" accept="image/*" style="padding:8px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:#fff;color:var(--gray-800);cursor:pointer;width:100%"><span class="hint">建議尺寸 1200x400px，支援 JPG/PNG</span></div>' +
+      '<div style="margin-top:8px;padding:12px;background:var(--gray-50);border-radius:8px;text-align:center">' +
+        '<img id="bs-preview" src="' + (settings.bannerImage || '') + '" style="max-width:100%;max-height:120px;border-radius:6px;' + (settings.bannerImage ? '' : 'display:none') + '" alt="預覽">' +
+        '<p style="font-size:13px;color:var(--gray-400)">' + (settings.bannerImage ? '目前的海報圖片' : '暫無海報圖片，顯示預設漸層') + '</p></div>' +
+      '<div class="form-group"><label>成班默認目標人數</label><input type="number" id="bs-min" value="' + (parseInt(settings.courseMinCount) || 8) + '" min="1"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-danger" onclick="teacherClearBanner()">🗑️ 清除海報</button><button class="btn btn-primary" onclick="teacherSaveBanner()">儲存設定</button></div>';
+  document.getElementById('bs-image').addEventListener('change', function (e) {
+    const preview = document.getElementById('bs-preview');
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        preview.src = ev.target.result;
+        preview.style.display = '';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+}
+
+async function teacherSaveBanner() {
+  const preview = document.getElementById('bs-preview');
+  const fileInput = document.getElementById('bs-image');
+  let bannerImage = settings.bannerImage;
+  if (fileInput.files.length > 0 && preview.src && preview.src.startsWith('data:')) {
+    bannerImage = preview.src;
+  } else if (preview.style.display === 'none' || !preview.src || preview.src === location.href) {
+    bannerImage = '';
+  }
+  const newSettings = {
+    bannerTitle: document.getElementById('bs-title').value.trim() || '學而思新校區團課平台',
+    bannerSubtitle: document.getElementById('bs-subtitle').value.trim() || '促團成班，讓我們傾聽您的聲音。',
+    bannerImage: bannerImage,
+    courseMinCount: String(parseInt(document.getElementById('bs-min').value) || 8)
+  };
+  await api('PUT', '/settings', newSettings);
+  settings = await api('GET', '/settings');
+  renderBanner();
+  showToast('設定已儲存！', 'success');
+}
+
+async function teacherClearBanner() {
+  const preview = document.getElementById('bs-preview');
+  preview.src = '';
+  preview.style.display = 'none';
+  document.getElementById('bs-image').value = '';
+  showToast('海報已清除，按「儲存設定」生效，將顯示預設橙色漸層', 'info');
+}
+
+// ----- Activities Settings -----
+function renderActivitiesSettings(body) {
+  (async () => {
+    const activities = await api('GET', '/activities');
+    body.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+      '<h3 style="margin:0">🎉 活動管理</h3>' +
+      '<button class="btn btn-primary btn-sm" onclick="teacherAddActivity()">＋ 新增活動</button></div>' +
+      (activities.length === 0 ? '<p style="color:var(--gray-400)">暫無活動</p>' :
+        [...activities].sort((a, b) => b.created_at - a.created_at).map(a => {
+          const date = new Date(a.created_at).toLocaleDateString('zh-Hant');
+          return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:12px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:8px">' +
+            '<div><strong>' + escapeHtml(a.title) + '</strong><p style="font-size:13px;color:var(--gray-500);margin-top:4px">' + escapeHtml(a.content) + '</p>' +
+            '<span style="font-size:12px;color:var(--gray-400)">' + date + '</span></div>' +
+            '<button class="btn btn-danger btn-sm" onclick="teacherDeleteActivity(\'' + a.id + '\')">刪除</button></div>';
+        }).join(''));
+  })();
+}
+
+async function teacherAddActivity() {
+  const title = await showPromptModal('請輸入活動標題');
+  if (!title || !title.trim()) return;
+  const content = await showPromptModal('請輸入活動內容');
+  if (!content || !content.trim()) return;
+  await api('POST', '/activities', { title: title.trim(), content: content.trim() });
+  showToast('活動新增成功！', 'success');
+  renderActivitiesSettings(document.getElementById('panel-body'));
+  await renderActivities();
+}
+
+async function teacherDeleteActivity(id) {
+  const confirmed = await showConfirmModal('確定要刪除此活動？');
+  if (!confirmed) return;
+  await api('DELETE', '/activities/' + id);
+  showToast('活動已刪除', 'info');
+  renderActivitiesSettings(document.getElementById('panel-body'));
+  await renderActivities();
+}
+
+// ----- Treehole Manage -----
+function renderTreeholeManage(body) {
+  (async () => {
+    const posts = await api('GET', '/posts');
+    body.innerHTML = '<h3>🌳 樹洞管理</h3><p style="font-size:13px;color:var(--gray-400);margin-bottom:12px">共 ' + posts.length + ' 篇帖子</p>' +
+      (posts.length === 0 ? '<p style="color:var(--gray-400)">暫無帖子</p>' :
+        [...posts].sort((a, b) => b.created_at - a.created_at).map(p =>
+          '<div style="padding:12px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:8px">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+              '<div><strong style="font-size:13px;color:var(--gray-500)">' + escapeHtml(p.nickname || '匿名家長') + '</strong>' +
+              '<span style="font-size:12px;color:var(--gray-400);margin-left:8px">' + new Date(p.created_at).toLocaleString('zh-Hant') + '</span></div>' +
+              '<button class="btn btn-danger btn-sm" onclick="teacherDeletePost(\'' + p.id + '\')">刪除</button></div>' +
+            '<p style="margin-top:8px;font-size:14px">' + escapeHtml(p.content) + '</p>' +'<div style="margin-top:6px;font-size:12px;color:var(--gray-400);display:flex;gap:12px">' +'<span>❤️ ' + (p.likes || 0) + '</span>' +'<span>💬 ' + ((p.comments && p.comments.length) || 0) + '</span>' +'</div>' +((p.comments && p.comments.length > 0) ? '<div style="margin-top:6px;padding-left:10px;border-left:2px solid #f0e8e0;font-size:12px;color:var(--gray-500)">' + p.comments.slice(-2).map(function(c){return '<div style="margin-bottom:3px"><span style="color:var(--gray-600);font-weight:500">' + escapeHtml(c.nickname || '匿名家長') + '：</span>' + escapeHtml(c.content) + '</div>';}).join('') + '</div>' : '') +'</div>').join(''));
+  })();
+}
+
+async function teacherDeletePost(id) {
+  if (!confirm('確定要刪除此帖子？')) return;
+  await api('DELETE', '/posts/' + id);
+  showToast('帖子已刪除', 'info');
+  renderTreeholeManage(document.getElementById('panel-body'));
+  await renderPosts();
+}
+
+// ----- Export -----
+function renderExport(body) {
+  body.innerHTML = '<h3>📥 數據導出</h3>' +
+    '<p style="font-size:14px;color:var(--gray-500);margin-bottom:16px">選擇要導出的課程，下載家長報名資訊 CSV 檔案。</p>' +
+    '<div style="margin-bottom:12px">' +
+      '<label style="font-size:14px;font-weight:500;display:block;margin-bottom:8px">選擇校區</label>' +
+      '<select id="export-campus" onchange="renderExportCourses()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;width:100%">' +
+        '<option value="">全部校區</option>' + campuses.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('') +
+      '</select></div>' +
+    '<div id="export-course-list"></div>' +
+    '<div style="margin-top:16px"><button class="btn btn-primary" onclick="exportAllData()">📥 導出所有數據（CSV）</button></div>';
+  renderExportCourses();
+}
+
+function renderExportCourses() {
+  const el = document.getElementById('export-course-list');
+  const campusId = document.getElementById('export-campus').value;
+  let courses = allCourses;
+  if (campusId) courses = courses.filter(c => c.campus_id === campusId);
+  if (courses.length === 0) { el.innerHTML = '<p style="color:var(--gray-400);font-size:13px">暫無課程可導出</p>'; return; }
+  el.innerHTML = '<label style="font-size:14px;font-weight:500;display:block;margin-bottom:8px">選擇課程（可多選）</label>' +
+    '<div class="checkbox-group">' +
+    courses.map(c => {
+      const campus = campuses.find(ca => ca.id === c.campus_id);
+      const regs = getRegsForCourse(c.id);
+      return '<label class="checkbox-item"><input type="checkbox" value="' + c.id + '" checked>' +
+        (campus ? campus.name : '') + ' · ' + c.grade + ' · ' + c.weekday + ' ' + c.time_slot + '（' + regs.length + ' 人）</label>';
+    }).join('') +
+    '</div><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="exportSelectedCourses()">📥 導出所選</button>';
+}
+
+function exportSelectedCourses() {
+  const checked = document.querySelectorAll('#export-course-list input[type=checkbox]:checked');
+  if (checked.length === 0) { showToast('請至少選擇一個課程', 'error'); return; }
+  generateCSV([...checked].map(cb => cb.value));
+}
+
+function exportAllData() { generateCSV(allCourses.map(c => c.id)); }
+
+async function generateCSV(courseIds) {
+  const headers = ['校區','年級','學科','星期','時間段','課程備註','家長電話','學生姓名','家長備註','報名時間'];
+  const rows = [];
+  for (const cid of courseIds) {
+    const c = allCourses.find(x => x.id === cid);
+    if (!c) continue;
+    const campus = campuses.find(ca => ca.id === c.campus_id);
+    const regs = await api('GET', '/registrations?courseId=' + cid);
+    regs.forEach(r => {
+      rows.push([campus ? campus.name : '', c.grade, c.subject || '數學', c.weekday, c.time_slot, c.notes || '', r.phone, r.student_name, r.notes || '', new Date(r.created_at).toLocaleString('zh-Hant')]);
+    });
+  }
+  if (rows.length === 0) { showToast('所選課程暫無報名數據', 'info'); return; }
+  let csv = '\uFEFF' + headers.join(',') + '\n';
+  rows.forEach(row => { csv += row.map(v => '"' + (v || '').replace(/"/g, '""') + '"').join(',') + '\n'; });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '學而思團課報名數據_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('已導出 ' + rows.length + ' 條報名資料 📥', 'success');
+}
+
+// ===== Init =====
+async function init() {
+  settings = await api('GET', '/settings');
+  renderBanner();
+  await renderActivities();
+  await loadCampuses();
+  await loadAndRenderCourses();
+  await renderPosts();
+}
+
+init();
+</script>
+</body>
+</html>

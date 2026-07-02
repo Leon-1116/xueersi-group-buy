@@ -1,0 +1,15 @@
+{
+  "name": "xueersi-group-buy",
+  "version": "1.0.0",
+  "description": "學而思新校區團課平台 - 後端版本",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  }
+}
