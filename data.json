@@ -1,0 +1,443 @@
+{
+  "campuses": [
+    {
+      "id": "c2",
+      "name": "沙田石門校區",
+      "address": "新界沙田石門安群街1號京瑞廣場2期2樓226及227號鋪",
+      "banner": ""
+    },
+    {
+      "id": "c3",
+      "name": "荔枝角校區",
+      "address": "九龍荔枝角深盛路9號宇晴匯商場2樓23.24及96铺",
+      "banner": ""
+    },
+    {
+      "id": "c4",
+      "name": "港大西寶城校區",
+      "address": "香港卑路乍街8號西寶城2樓241號舖",
+      "banner": ""
+    },
+    {
+      "id": "c5",
+      "name": "天后校區",
+      "address": "香港天后銅鑼灣道180號百樂商業中心4樓402室及5樓502室",
+      "banner": ""
+    },
+    {
+      "id": "mr0vyk2bpghe",
+      "name": "荃灣西校區",
+      "address": "新界荃灣大河道100號海之戀商場3樓3090-3093號舖",
+      "banner": ""
+    }
+  ],
+  "courses": [
+    {
+      "id": "co3",
+      "campus_id": "c2",
+      "grade": "K3",
+      "subject": "數學",
+      "weekday": "週六",
+      "time_slot": "上午（0830-1200）",
+      "notes": "精英班",
+      "teacher_name": "李老師",
+      "max_capacity": 15,
+      "min_count": 6,
+      "created_at": 1782748458081
+    },
+    {
+      "id": "co4",
+      "campus_id": "c2",
+      "grade": "P4",
+      "subject": "數學",
+      "weekday": "週日",
+      "time_slot": "下午（1300-1700）",
+      "notes": "進階班",
+      "teacher_name": "王老師",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1782489258081
+    },
+    {
+      "id": "co5",
+      "campus_id": "c3",
+      "grade": "K2",
+      "subject": "數學",
+      "weekday": "週六",
+      "time_slot": "上午（0830-1200）",
+      "notes": "尖端班",
+      "teacher_name": "林老師",
+      "max_capacity": 15,
+      "min_count": 6,
+      "created_at": 1782402858081
+    },
+    {
+      "id": "mr2vet6ot4ol",
+      "campus_id": "c2",
+      "grade": "K1",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "面試班",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1782958424640
+    },
+    {
+      "id": "mr2y9i0b6ofk",
+      "campus_id": "c4",
+      "grade": "K1",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "面試班",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1782963215723
+    },
+    {
+      "id": "mr2yfpnq7q3t",
+      "campus_id": "c3",
+      "grade": "K1",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "面試班",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1782963505574
+    },
+    {
+      "id": "mr2ypf0lflys",
+      "campus_id": "c5",
+      "grade": "K3",
+      "weekday": "週日",
+      "time_slot": "上午（0830-1200）",
+      "notes": "",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1782963958341
+    },
+    {
+      "id": "mr3m3kayji8r",
+      "campus_id": "c3",
+      "grade": "P2",
+      "weekday": "週二",
+      "time_slot": "下午（1300-1700）",
+      "notes": "",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783003249546
+    },
+    {
+      "id": "mr3n0wt4rj9e",
+      "campus_id": "c4",
+      "grade": "K3",
+      "weekday": "週五",
+      "time_slot": "下午（1300-1700）",
+      "notes": "面試班",
+      "teacher_name": "兵兵",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783004805400
+    },
+    {
+      "id": "mr4lwq2wki29",
+      "campus_id": "c4",
+      "grade": "P1",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "面試班",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783063396616
+    },
+    {
+      "id": "mr50er1jdqhl",
+      "campus_id": "c2",
+      "grade": "K1",
+      "weekday": "週二",
+      "time_slot": "",
+      "notes": "面試班",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783087752295
+    }
+  ],
+  "registrations": [
+    {
+      "id": "r1",
+      "course_id": "co1",
+      "phone": "13800001111",
+      "student_name": "王小明",
+      "notes": "",
+      "created_at": 1782748458081
+    },
+    {
+      "id": "r2",
+      "course_id": "co1",
+      "phone": "13800002222",
+      "student_name": "李小華",
+      "notes": "希望早點開班",
+      "created_at": 1782791658081
+    },
+    {
+      "id": "r3",
+      "course_id": "co2",
+      "phone": "13900003333",
+      "student_name": "張小美",
+      "notes": "",
+      "created_at": 1782662058081
+    },
+    {
+      "id": "mr1cvb0dwh4h",
+      "course_id": "mr1cvaj7iw9m",
+      "phone": "12345678900",
+      "student_name": "啊啊啊",
+      "notes": "",
+      "created_at": 1782866815357
+    },
+    {
+      "id": "mr2uqra3xms1",
+      "course_id": "mr2uqr9zsaie",
+      "phone": "52222222",
+      "student_name": "li",
+      "notes": "",
+      "created_at": 1782957302427
+    },
+    {
+      "id": "mr2urkku75n6",
+      "course_id": "mr2urkkoqh7u",
+      "phone": "52223333",
+      "student_name": "oo",
+      "notes": "",
+      "created_at": 1782957340398
+    },
+    {
+      "id": "mr2v63d9g67y",
+      "course_id": "mr2v63cxyywa",
+      "phone": "52223333",
+      "student_name": "ww",
+      "notes": "",
+      "created_at": 1782958017933
+    },
+    {
+      "id": "mr2v9eaq2nsz",
+      "course_id": "mr2v9eamcy9h",
+      "phone": "52324444",
+      "student_name": "ee",
+      "notes": "",
+      "created_at": 1782958172066
+    },
+    {
+      "id": "mr2y9i0f0gkr",
+      "course_id": "mr2y9i0b6ofk",
+      "phone": "67891234",
+      "student_name": "pp",
+      "notes": "",
+      "created_at": 1782963215727
+    },
+    {
+      "id": "mr2yfpot4jmd",
+      "course_id": "mr2yfpnq7q3t",
+      "phone": "52223434",
+      "student_name": "QQ",
+      "notes": "",
+      "created_at": 1782963505613
+    },
+    {
+      "id": "mr2ypf5txyd0",
+      "course_id": "mr2ypf0lflys",
+      "phone": "66678890",
+      "student_name": "rr",
+      "notes": "",
+      "created_at": 1782963958529
+    },
+    {
+      "id": "mr3m3kbxnx01",
+      "course_id": "mr3m3kayji8r",
+      "phone": "52166487",
+      "student_name": "uu",
+      "notes": "",
+      "created_at": 1783003249581
+    },
+    {
+      "id": "mr3mws2lnr27",
+      "course_id": "mr2y9i0b6ofk",
+      "phone": "66666666",
+      "student_name": "耶耶",
+      "notes": "",
+      "created_at": 1783004612637
+    },
+    {
+      "id": "mr3n0wuy4ce2",
+      "course_id": "mr3n0wt4rj9e",
+      "phone": "66665471",
+      "student_name": "www",
+      "notes": "",
+      "created_at": 1783004805466
+    },
+    {
+      "id": "mr4lwq3xr8j2",
+      "course_id": "mr4lwq2wki29",
+      "phone": "59884196",
+      "student_name": "PP",
+      "notes": "",
+      "created_at": 1783063396653
+    },
+    {
+      "id": "mr4pyhg57zz3",
+      "course_id": "mr2vet6ot4ol",
+      "phone": "56246614",
+      "student_name": "55",
+      "notes": "",
+      "created_at": 1783070197205
+    }
+  ],
+  "posts": [
+    {
+      "id": "p1",
+      "nickname": "東區媽媽",
+      "content": "請問各位家長，荃灣西校區的數學思維班老師教得怎麼樣？",
+      "created_at": 1782662058081,
+      "likes": 5
+    },
+    {
+      "id": "p2",
+      "nickname": "金橋爸爸",
+      "content": "建議學校在沙田石門校區多開一些週末的英語班，很多家長都有這個需求！",
+      "created_at": 1782748458081,
+      "likes": 13,
+      "comments": [
+        {
+          "id": "mr0u5zsftm7s",
+          "nickname": "匿名家長",
+          "content": "abc",
+          "created_at": 1782835401327
+        },
+        {
+          "id": "mr4lj115mj1v",
+          "nickname": "匿名家長",
+          "content": "defg",
+          "created_at": 1783062757625
+        }
+      ]
+    },
+    {
+      "id": "mr3m22fy3qha",
+      "nickname": "QQ",
+      "content": "Janine老師實在是棒啦！",
+      "created_at": 1783003179742,
+      "likes": 11,
+      "comments": [
+        {
+          "id": "mr3n2cayxx9a",
+          "nickname": "匿名家長",
+          "content": "+10086",
+          "created_at": 1783004872138
+        },
+        {
+          "id": "mr3n2jj8p82z",
+          "nickname": "匿名家長",
+          "content": "真的超級棒！！",
+          "created_at": 1783004881508
+        }
+      ]
+    },
+    {
+      "id": "mr3m2jtt98u4",
+      "nickname": "Angel媽媽",
+      "content": "新校區環境真好",
+      "created_at": 1783003202273,
+      "likes": 0,
+      "comments": []
+    },
+    {
+      "id": "mr3mz8t8l4wx",
+      "nickname": "ice🧊",
+      "content": "乒乓老師真的太好了☺️第一次遇到這麼耐心的老師，如果早點遇到像冰冰這樣老師就好了，點讚點讚👍🏻👍🏻👍🏻",
+      "created_at": 1783004727644,
+      "likes": 5,
+      "comments": [
+        {
+          "id": "mr3n1zl00ika",
+          "nickname": "匿名家長",
+          "content": "+1",
+          "created_at": 1783004855652
+        },
+        {
+          "id": "mr3nayrd10uw",
+          "nickname": "匿名家長",
+          "content": "居然還有高手",
+          "created_at": 1783005274489
+        }
+      ]
+    },
+    {
+      "id": "mr3nbphu2trq",
+      "nickname": "凱莉",
+      "content": "凱莉老師無敵",
+      "created_at": 1783005309138,
+      "likes": 8,
+      "comments": [
+        {
+          "id": "mr4li14xl2xg",
+          "nickname": "匿名家長",
+          "content": "真的太棒了！",
+          "created_at": 1783062711105
+        }
+      ]
+    },
+    {
+      "id": "mr4m0wl5ag82",
+      "nickname": "匿名家長",
+      "content": "學而思西寶城太棒了~~~~",
+      "created_at": 1783063591674,
+      "likes": 14,
+      "comments": []
+    }
+  ],
+  "activities": [
+    {
+      "id": "a1",
+      "title": "暑期團課早鳥優惠",
+      "content": "7月31日前報名可享9折優惠！",
+      "campus_id": "",
+      "created_at": 1782230058081
+    },
+    {
+      "id": "mr0vhjdqkiil",
+      "title": "測試測試",
+      "content": "測試測試測試",
+      "campus_id": "",
+      "created_at": 1782837619550
+    }
+  ],
+  "settings": {
+    "bannerTitle": "學而思新校區團課平台",
+    "bannerSubtitle": "促團成班，讓我們傾聽您的聲音。",
+    "bannerImage": "",
+    "courseMinCount": "8"
+  },
+  "teachers": [
+    {
+      "username": "admin",
+      "password": "admin123",
+      "name": "管理員"
+    },
+    {
+      "username": "teacher",
+      "password": "teacher123",
+      "name": "張老師"
+    },
+    {
+      "username": "395229",
+      "password": "1234567a",
+      "name": "管理員"
+    }
+  ]
+}

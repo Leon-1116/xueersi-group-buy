@@ -27,6 +27,29 @@ function saveDB(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
 }
 
+// Railway Volume 初始化：第一次部署時從 repo 複製初始數據
+function initDataIfNeeded() {
+  if (DATA_DIR !== __dirname) {
+    // 使用 Railway Volume 模式 (DATA_DIR=/data)
+    if (!fs.existsSync(DB_PATH)) {
+      const seedPath = path.join(__dirname, 'data.json');
+      if (fs.existsSync(seedPath)) {
+        try {
+          const seedData = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+          saveDB(seedData);
+          console.log('✅ 初始數據已複製到 Railway Volume');
+        } catch (e) {
+          console.log('⚠️ 初始數據複製失敗:', e.message);
+        }
+      } else {
+        console.log('ℹ️ 未找到初始數據文件，將使用預設空數據');
+      }
+    } else {
+      console.log('ℹ️ Volume 已有數據，跳過初始化');
+    }
+  }
+}
+
 function getDB() {
   let db = loadDB();
   if (!db) {
@@ -306,6 +329,9 @@ app.delete('/api/activities/:id', (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// 啟動前初始化 Volume 數據（Railway 部署用）
+initDataIfNeeded();
 
 app.listen(PORT, HOST, () => {
   console.log(`✅ 學而思團課平台伺服器啟動成功！`);
