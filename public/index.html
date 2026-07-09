@@ -506,7 +506,7 @@ a:hover{color:var(--orange-700)}
       <div class="form-group">
         <label>分類</label>
         <select id="ap-category" style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:#fff">
-          <option value="">不分類</option>
+          
           <option value="教育討論">教育討論</option>
           <option value="關於學而思">關於學而思</option>
           <option value="吹水台">吹水台</option>
@@ -895,7 +895,15 @@ function setCategory(btn) {
 
 async function renderPosts() {
   const el = document.getElementById('post-list');
-  const posts = await api('GET', '/posts');
+  const cat = document.getElementById('filter-category')?.value || '';
+  const search = document.getElementById('search-posts')?.value || '';
+  const sort = document.getElementById('sort-posts')?.value || 'time';
+  const params = new URLSearchParams();
+  if (cat) params.set('category', cat);
+  if (search) params.set('search', search);
+  if (sort && sort !== 'time') params.set('sort', sort);
+  const qs = params.toString();
+  const posts = await api('GET', '/posts' + (qs ? '?' + qs : ''));
   if (posts.length === 0) {
     el.innerHTML = '<div class="empty-state"><div class="icon">🌳</div><h3>暫無帖子</h3><p>成為第一個發言的家長吧！</p></div>';
     return;
@@ -909,9 +917,9 @@ async function renderPosts() {
         '<div class="post-author">' +
           '<div class="avatar" style="background:' + colors[colorIdx] + ';color:#fff">' + (p.nickname || '匿名')[0] + '</div>' +
           '<span class="name">' + (p.nickname || '匿名家長') + '</span>' +
+          (p.is_teacher ? '<span style="font-size:11px;background:#22C55E;color:#fff;padding:0 6px;border-radius:4px;margin-left:4px">✅ 已認證</span>' : '') +
           (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
-          (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
-          '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' +
+          (!p.is_teacher ? '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' : '') +
         '</div>' +
         '<span class="post-time">' + date + '</span>' +
       '</div>' +
@@ -927,6 +935,7 @@ async function renderPosts() {
           return '<div class="comment-item">' +
             '<div class="comment-meta">' +
               '<span class="comment-author">' + escapeHtml(c.nickname || '\u533f\u540d\u5bb6\u957f') + '</span>' +
+              (c.is_teacher ? '<span style="font-size:10px;background:#22C55E;color:#fff;padding:1px 6px;border-radius:8px;margin-left:4px;vertical-align:middle">✅ 已認證</span>' : '') +
               '<span class="comment-time">' + cdate + '</span>' +
             '</div>' +
             '<div class="comment-content">' + escapeHtml(c.content) + '</div>' +
@@ -957,10 +966,14 @@ function toggleComments(postId) {
 }
 
 async function submitComment(postId) {
-  const input = document.getElementById('comment-input-' + postId);
-  const content = input.value.trim();
+  var input = document.getElementById('comment-input-' + postId);
+  var content = input.value.trim();
   if (!content) { showToast('請輸入留言內容', 'error'); return; }
-  await api('POST', '/posts/' + postId + '/comment', { content });
+  var teacherUser = localStorage.getItem('teacher_username');
+  var teacherName = localStorage.getItem('teacher_name');
+  var data = { content: content };
+  if (teacherUser) { data.is_teacher = true; data.teacher_name = teacherName; }
+  await api('POST', '/posts/' + postId + '/comment', data);
   input.value = '';
   showToast('留言已發送 💬', 'success');
   await renderPosts();
@@ -1010,18 +1023,37 @@ function showPromptModal(title, defaultValue) {
 }
 
 function openAddPostModal() {
-  document.getElementById('ap-nickname').value = '';
+  var teacherUser = localStorage.getItem('teacher_username');
+  var teacherName = localStorage.getItem('teacher_name');
+  var nickInput = document.getElementById('ap-nickname');
+  if (teacherUser) {
+    nickInput.value = teacherName;
+    nickInput.readOnly = true;
+    nickInput.style.background = 'var(--gray-50)';
+    nickInput.style.color = 'var(--gray-600)';
+    nickInput.style.cursor = 'not-allowed';
+  } else {
+    nickInput.value = '';
+    nickInput.readOnly = false;
+    nickInput.style.background = '';
+    nickInput.style.color = '';
+    nickInput.style.cursor = '';
+  }
   document.getElementById('ap-content').value = '';
   document.getElementById('ap-category').value = '';
   openModal('add-post-modal');
 }
 
 async function submitPost() {
-  const nickname = document.getElementById('ap-nickname').value.trim() || '匿名家長';
-  const content = document.getElementById('ap-content').value.trim();
-  const category = document.getElementById('ap-category').value;
+  var teacherUser = localStorage.getItem('teacher_username');
+  var teacherName = localStorage.getItem('teacher_name');
+  var nickname = teacherUser ? teacherName : (document.getElementById('ap-nickname').value.trim() || '匿名家長');
+  var content = document.getElementById('ap-content').value.trim();
+  var category = document.getElementById('ap-category').value;
   if (!content) { showToast('請輸入帖子內容', 'error'); return; }
-  await api('POST', '/posts', { nickname, content, category });
+  var data = { nickname: nickname, content: content, category: category };
+  if (teacherUser) { data.is_teacher = true; data.teacher_name = teacherName; }
+  await api('POST', '/posts', data);
   closeModal('add-post-modal');
   showToast('發佈成功！🌳', 'success');
   await renderPosts();
@@ -1370,6 +1402,13 @@ function renderTreeholeManage(body) {
               '<button class="btn btn-danger btn-sm" onclick="teacherDeletePost(\'' + p.id + '\')">刪除</button></div>' +
             '<p style="margin-top:8px;font-size:14px">' + escapeHtml(p.content) + '</p>' +'<div style="margin-top:6px;font-size:12px;color:var(--gray-400);display:flex;gap:12px">' +'<span>❤️ ' + (p.likes || 0) + '</span>' +'<span>💬 ' + ((p.comments && p.comments.length) || 0) + '</span>' +'</div>' +((p.comments && p.comments.length > 0) ? '<div style="margin-top:6px;padding-left:10px;border-left:2px solid #f0e8e0;font-size:12px;color:var(--gray-500)">' + p.comments.slice(-2).map(function(c){return '<div style="margin-bottom:3px"><span style="color:var(--gray-600);font-weight:500">' + escapeHtml(c.nickname || '匿名家長') + '：</span>' + escapeHtml(c.content) + '</div>';}).join('') + '</div>' : '') +'</div>').join(''));
   })();
+}
+
+async function teacherTogglePin(id, current) {
+  await api('PUT', '/posts/' + id + '/pin', { pinned: !current });
+  showToast(current ? '已取消置頂' : '已設為置頂', 'info');
+  renderTreeholeManage(document.getElementById('panel-body'));
+  await renderPosts();
 }
 
 async function teacherDeletePost(id) {

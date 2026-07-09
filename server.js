@@ -325,14 +325,18 @@ app.get('/api/posts', (req, res) => {
       p.nickname.toLowerCase().includes(q)
     );
   }
-  const sortBy = req.query.sort || 'time';
+  // 置頂帖子永遠在前面
+  var pinnedPosts = posts.filter(function(p) { return p.pinned; });
+  var normalPosts = posts.filter(function(p) { return !p.pinned; });
+  var sortBy = req.query.sort || 'time';
   if (sortBy === 'likes') {
-    posts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    normalPosts.sort(function(a, b) { return (b.likes || 0) - (a.likes || 0); });
   } else if (sortBy === 'comments') {
-    posts.sort((a, b) => ((b.comments && b.comments.length) || 0) - ((a.comments && a.comments.length) || 0));
+    normalPosts.sort(function(a, b) { return ((b.comments && b.comments.length) || 0) - ((a.comments && a.comments.length) || 0); });
   } else {
-    posts.sort((a, b) => b.created_at - a.created_at);
+    normalPosts.sort(function(a, b) { return b.created_at - a.created_at; });
   }
+  posts = pinnedPosts.concat(normalPosts);
   res.json(posts);
 });
 
@@ -340,7 +344,7 @@ app.post('/api/posts', (req, res) => {
   const db = getDB();
   const { nickname, content, category } = req.body;
   if (!content) return res.json({ success: false, message: '請輸入內容' });
-  const post = { id: genId(), nickname: nickname || '匿名家長', content, category: category || '', created_at: Date.now(), likes: 0, comments: [], liked_ips: [] };
+  const post = { id: genId(), nickname: nickname || '匿名家長', content, category: category || '', created_at: Date.now(), likes: 0, comments: [], liked_ips: [], pinned: false, is_teacher: req.body.is_teacher || false, teacher_name: req.body.teacher_name || '' };
   db.posts.push(post);
   saveDB(db);
  res.json({ success: true, id: post.id });
@@ -373,7 +377,7 @@ app.post('/api/posts/:id/comment', (req, res) => {
   const { content } = req.body;
   if (!content) return res.json({ success: false, message: '請輸入留言內容' });
   if (!post.comments) post.comments = [];
-  const comment = { id: genId(), nickname: '匿名家長', content, created_at: Date.now() };
+  const comment = { id: genId(), nickname: req.body.is_teacher ? (req.body.teacher_name || '匿名家長') : '匿名家長', content, created_at: Date.now(), is_teacher: req.body.is_teacher || false, teacher_name: req.body.teacher_name || '' };
   post.comments.push(comment);
   saveDB(db);
   res.json({ success: true, comment });
@@ -399,6 +403,16 @@ app.delete('/api/posts/:id', (req, res) => {
   db.posts = db.posts.filter(p => p.id !== req.params.id);
   saveDB(db);
   res.json({ success: true });
+});
+
+// Pin/Unpin Posts
+app.put('/api/posts/:id/pin', (req, res) => {
+  const db = getDB();
+  const post = db.posts.find(p => p.id === req.params.id);
+  if (!post) return res.status(404).json({ success: false });
+  post.pinned = req.body.pinned === true || req.body.pinned === 'true';
+  saveDB(db);
+  res.json({ success: true, pinned: post.pinned });
 });
 
 // Activities
