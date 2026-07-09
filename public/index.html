@@ -912,6 +912,7 @@ async function renderPosts() {
     const colors = ['#F59E7A','#60A5FA','#34D399','#A78BFA','#F472B6','#FBBF24'];
     const colorIdx = p.nickname ? p.nickname.charCodeAt(0) % colors.length : 0;
     const date = new Date(p.created_at).toLocaleDateString('zh-Hant', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const pTeacher = !!localStorage.getItem('teacher_username');
     return '<div class="post-card" data-id="' + p.id + '">' +
       '<div class="post-header">' +
         '<div class="post-author">' +
@@ -921,7 +922,8 @@ async function renderPosts() {
           (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
           (!p.is_teacher ? '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' : '') +
         '</div>' +
-        '<span class="post-time">' + date + '</span>' +
+        (pTeacher ? '<button class="pin-btn" onclick="teacherTogglePin(\'' + p.id + '\',' + (p.pinned ? 'true' : 'false') + ')" style="background:none;border:none;cursor:pointer;font-size:13px;padding:0 4px;color:var(--gray-500)" title="' + (p.pinned ? '取消置頂' : '設為置頂') + '">' + (p.pinned ? '📌 置頂' : '📍 置頂') + '</button>' : '') +
+              '<span class="post-time">' + date + '</span>' +
       '</div>' +
       '<div class="post-content">' + escapeHtml(p.content) + '</div>' +
       '<div class="post-actions">' +
@@ -1407,7 +1409,7 @@ function renderTreeholeManage(body) {
 async function teacherTogglePin(id, current) {
   await api('PUT', '/posts/' + id + '/pin', { pinned: !current });
   showToast(current ? '已取消置頂' : '已設為置頂', 'info');
-  renderTreeholeManage(document.getElementById('panel-body'));
+  var pb = document.getElementById('panel-body'); if(pb) renderTreeholeManage(pb);
   await renderPosts();
 }
 
@@ -1415,7 +1417,7 @@ async function teacherDeletePost(id) {
   if (!confirm('確定要刪除此帖子？')) return;
   await api('DELETE', '/posts/' + id);
   showToast('帖子已刪除', 'info');
-  renderTreeholeManage(document.getElementById('panel-body'));
+  var pb = document.getElementById('panel-body'); if(pb) renderTreeholeManage(pb);
   await renderPosts();
 }
 

@@ -204,7 +204,8 @@
       "created_at": 1782662058081,
       "likes": 5,
       "category": "",
-      "liked_ips": []
+      "liked_ips": [],
+      "pinned": true
     },
     {
       "id": "p2",
@@ -373,7 +374,8 @@
           "teacher_name": "學而思_泉兵老師"
         }
       ],
-      "liked_ips": []
+      "liked_ips": [],
+      "pinned": true
     },
     {
       "id": "mrdbnfpgt19e",
