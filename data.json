@@ -118,6 +118,32 @@
       "max_capacity": 20,
       "min_count": 8,
       "created_at": 1783063396616
+    },
+    {
+      "id": "mrd6uig8nsuk",
+      "campus_id": "c2",
+      "grade": "K2",
+      "subject": "數學",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783582294760
+    },
+    {
+      "id": "mrd7lkufswus",
+      "campus_id": "mr0vyk2bpghe",
+      "grade": "K3",
+      "subject": "面試班（僅限幼兒年級）",
+      "weekday": "週二",
+      "time_slot": "上午（0830-1200）",
+      "notes": "",
+      "teacher_name": "",
+      "max_capacity": 20,
+      "min_count": 8,
+      "created_at": 1783583557575
     }
   ],
   "registrations": [
@@ -152,6 +178,22 @@
       "student_name": "PP",
       "notes": "",
       "created_at": 1783063396653
+    },
+    {
+      "id": "mrd6uigdqgvb",
+      "course_id": "mrd6uig8nsuk",
+      "phone": "57755223",
+      "student_name": "pp",
+      "notes": "",
+      "created_at": 1783582294765
+    },
+    {
+      "id": "mrd7lkurjtc2",
+      "course_id": "mrd7lkufswus",
+      "phone": "53333222",
+      "student_name": "測試",
+      "notes": "",
+      "created_at": 1783583557587
     }
   ],
   "posts": [
@@ -160,18 +202,16 @@
       "nickname": "東區媽媽",
       "content": "請問各位家長，荃灣西校區的數學思維班老師教得怎麼樣？",
       "created_at": 1782662058081,
-      "likes": 6,
+      "likes": 5,
       "category": "",
-      "liked_ips": [
-        "127.0.0.1"
-      ]
+      "liked_ips": []
     },
     {
       "id": "p2",
       "nickname": "金橋爸爸",
       "content": "建議學校在沙田石門校區多開一些週末的英語班，很多家長都有這個需求！",
       "created_at": 1782748458081,
-      "likes": 13,
+      "likes": 14,
       "comments": [
         {
           "id": "mr0u5zsftm7s",
@@ -186,14 +226,17 @@
           "created_at": 1783062757625
         }
       ],
-      "category": ""
+      "category": "",
+      "liked_ips": [
+        "127.0.0.1"
+      ]
     },
     {
       "id": "mr3m22fy3qha",
       "nickname": "QQ",
       "content": "Janine老師實在是棒啦！",
       "created_at": 1783003179742,
-      "likes": 11,
+      "likes": 12,
       "comments": [
         {
           "id": "mr3n2cayxx9a",
@@ -208,7 +251,10 @@
           "created_at": 1783004881508
         }
       ],
-      "category": ""
+      "category": "",
+      "liked_ips": [
+        "127.0.0.1"
+      ]
     },
     {
       "id": "mr3m2jtt98u4",
@@ -289,6 +335,18 @@
       "liked_ips": [
         "127.0.0.1"
       ]
+    },
+    {
+      "id": "mrd6xn1w7wsg",
+      "nickname": "匿名家長",
+      "content": "測試",
+      "category": "吹水台",
+      "created_at": 1783582440692,
+      "likes": 1,
+      "comments": [],
+      "liked_ips": [
+        "127.0.0.1"
+      ]
     }
   ],
   "activities": [
@@ -298,13 +356,6 @@
       "content": "7月31日前報名可享9折優惠！",
       "campus_id": "",
       "created_at": 1782230058081
-    },
-    {
-      "id": "mr0vhjdqkiil",
-      "title": "測試測試",
-      "content": "測試測試測試",
-      "campus_id": "",
-      "created_at": 1782837619550
     }
   ],
   "settings": {
@@ -316,8 +367,18 @@
   "teachers": [
     {
       "username": "395229",
+      "password": "1234567aaa",
+      "name": "學而思_泉兵老師"
+    },
+    {
+      "username": "334198",
       "password": "1234567a",
-      "name": "管理員"
+      "name": "學而思_張寧老師"
+    },
+    {
+      "username": "112379",
+      "password": "1234567a",
+      "name": "學而思_Tom Sir"
     }
   ]
 }

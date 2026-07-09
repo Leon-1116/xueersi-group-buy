@@ -18,6 +18,7 @@
   --orange-700:#C25E33;
   --orange-800:#9A4522;
   --orange-900:#7C381B;
+  --blue-50:#EFF6FF;
   --gray-50:#F9FAFB;
   --gray-100:#F3F4F6;
   --gray-200:#E5E7EB;
@@ -184,11 +185,12 @@ a:hover{color:var(--orange-700)}
 #fab-add:hover{transform:scale(1.1);background:rgba(224,122,79,.9)}
 
 #teacher-panel{
-  position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100vh;
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
   background:#fff;box-shadow:var(--shadow-xl);z-index:1001;
-  transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+  transition:opacity .35s ease,visibility .35s ease;display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;
 }
-#teacher-panel.open{right:0}
+#teacher-panel.open{opacity:1;visibility:visible}
 #teacher-panel .panel-header{background:var(--orange-500);color:#fff;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 #teacher-panel .panel-header h2{font-size:18px;font-weight:700}
 #teacher-panel .panel-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
@@ -201,7 +203,7 @@ a:hover{color:var(--orange-700)}
 }
 #teacher-panel .panel-nav button:hover{color:var(--orange-600);background:var(--orange-50)}
 #teacher-panel .panel-nav button.active{color:var(--orange-600);border-bottom-color:var(--orange-500)}
-#teacher-panel .panel-body{flex:1;overflow-y:auto;padding:20px 24px}
+#teacher-panel .panel-body{flex:1;overflow-y:auto;padding:24px 32px;max-width:1100px;margin:0 auto;width:100%}
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:var(--orange-50);border-radius:var(--radius-sm);padding:16px;text-align:center}
 .stat-card .num{font-size:28px;font-weight:900;color:var(--orange-600)}
@@ -285,7 +287,6 @@ a:hover{color:var(--orange-700)}
   #campus-bar{padding:12px 16px;flex-direction:column;align-items:stretch}
   #filter-bar{padding:10px 16px;overflow-x:auto;flex-wrap:nowrap}
   .course-grid{grid-template-columns:1fr}
-  #teacher-panel{width:100vw}
   .modal{padding:20px 16px}
   .modal-body{gap:12px}
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -348,12 +349,17 @@ a:hover{color:var(--orange-700)}
     </div>
     <p style="color:var(--gray-400);font-size:14px;margin-bottom:20px;">匿名發帖，自由交流。請友善發言 🤫</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
-      <select id="filter-category" onchange="renderPosts()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit">
-        <option value="">全部分類</option><option value="教育討論">教育討論</option><option value="關於學而思">關於學而思</option><option value="吹水台">吹水台</option>
-      </select>
+      <input type="hidden" id="filter-category" value="">
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="cat-tab" data-cat="" onclick="setCategory(this)" style="padding:6px 14px;border:1.5px solid var(--orange-300);border-radius:16px;background:var(--orange-500);color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit">📋 全部</button>
+        <button class="cat-tab" data-cat="教育討論" onclick="setCategory(this)" style="padding:6px 14px;border:1.5px solid var(--gray-200);border-radius:16px;background:#fff;color:var(--gray-600);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit">📚 教育討論</button>
+        <button class="cat-tab" data-cat="關於學而思" onclick="setCategory(this)" style="padding:6px 14px;border:1.5px solid var(--gray-200);border-radius:16px;background:#fff;color:var(--gray-600);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit">🏫 關於學而思</button>
+        <button class="cat-tab" data-cat="吹水台" onclick="setCategory(this)" style="padding:6px 14px;border:1.5px solid var(--gray-200);border-radius:16px;background:#fff;color:var(--gray-600);cursor:pointer;font-size:13px;font-weight:500;font-family:inherit">💬 吹水台</button>
+      </div>
       <input type="text" id="search-posts" placeholder="🔍 搜索帖子內容或暱稱..." style="flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:#fff;max-width:300px" oninput="renderPosts()">
       <select id="sort-posts" onchange="renderPosts()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit">
-        <option value="time">⏱️ 最新</option><option value="likes">❤️ 最熱</option>
+        <option value="time">⏱️ 最新</option>
+        <option value="comments">💬 最多評論</option><option value="likes">❤️ 最熱</option>
       </select>
     </div>
     <div id="post-list" class="post-list"></div>
@@ -404,7 +410,7 @@ a:hover{color:var(--orange-700)}
       <div class="form-group">
         <label>年級</label>
         <select id="ac-grade">
-          <option value="K1">K1</option><option value="K2">K2</option><option value="K3">K3</option>
+          <option value="K2">K2</option><option value="K3">K3</option>
           <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
           <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
           <option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option><option value="S4">S4</option>
@@ -413,7 +419,7 @@ a:hover{color:var(--orange-700)}
       <div class="form-group">
         <label>學科</label>
         <select id="ac-subject">
-          <option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班">面試班</option>
+          <option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班（僅限幼兒年級）">面試班（僅限幼兒年級）</option>
         </select>
       </div>
       <div class="form-group">
@@ -551,7 +557,7 @@ a:hover{color:var(--orange-700)}
     <span class="bn-icon">🌳</span>
     <span class="bn-label">家長樹洞</span>
   </button>
-  <button class="bottom-nav-btn" onclick="openLoginModal()">
+  <button class="bottom-nav-btn" onclick="openTeacherPanel()">
     <span class="bn-icon">🔑</span>
     <span class="bn-label">教師登入</span>
   </button>
@@ -591,6 +597,18 @@ function showToast(msg, type = 'info') {
 // ===== Modal =====
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function openLoginModal() { openModal('login-modal'); }
+
+function openTeacherPanel() {
+  var saved = localStorage.getItem('teacher_username');
+  if (saved) {
+    document.getElementById('nav-teachers').style.display = (saved === '395229') ? '' : 'none';
+    document.getElementById('panel-username').textContent = localStorage.getItem('teacher_name') || saved;
+    document.getElementById('teacher-panel').classList.add('open');
+    switchPanel('dashboard');
+  } else {
+    openLoginModal();
+  }
+}
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('active'); });
@@ -857,6 +875,24 @@ async function submitRegistration() {
 }
 
 // ===== Tree Hole =====
+let activeCategory = '';
+
+function setCategory(btn) {
+  document.querySelectorAll('.cat-tab').forEach(function(b) {
+    b.style.background = '#fff';
+    b.style.color = 'var(--gray-600)';
+    b.style.borderColor = 'var(--gray-200)';
+    b.style.fontWeight = '500';
+  });
+  btn.style.background = 'var(--orange-500)';
+  btn.style.color = '#fff';
+  btn.style.borderColor = 'var(--orange-300)';
+  btn.style.fontWeight = '600';
+  activeCategory = btn.dataset.cat;
+  document.getElementById('filter-category').value = activeCategory;
+  renderPosts();
+}
+
 async function renderPosts() {
   const el = document.getElementById('post-list');
   const posts = await api('GET', '/posts');
@@ -873,6 +909,7 @@ async function renderPosts() {
         '<div class="post-author">' +
           '<div class="avatar" style="background:' + colors[colorIdx] + ';color:#fff">' + (p.nickname || '匿名')[0] + '</div>' +
           '<span class="name">' + (p.nickname || '匿名家長') + '</span>' +
+          (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
           (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
           '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' +
         '</div>' +
@@ -1008,6 +1045,7 @@ async function handleLogin() {
   if (!result.success) { showToast('帳號或密碼錯誤', 'error'); return; }
   currentTeacher = result;
   localStorage.setItem('teacher_username', result.username);
+  localStorage.setItem('teacher_name', result.name);
   document.getElementById('nav-teachers').style.display = (result.username === '395229') ? '' : 'none';
   closeModal('login-modal');
   document.getElementById('panel-username').textContent = result.name;
@@ -1098,7 +1136,7 @@ function teacherAddCourse() {
       '<div class="form-group"><label>學科</label><select id="tc-subject"><option>數學</option><option>英語（僅限幼兒年級）</option></select></div>' +
       '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option>' + w + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" placeholder="例如：08:30-11:00"></div>' +
-      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" placeholder="例如：張老師"></div>' +
+      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" placeholder="例如：學而思_XX老師"></div>' +
       '<div class="form-group"><label>班級容量</label><input type="number" id="tc-capacity" value="20" min="1" max="100"></div>' +
       '<div class="form-group"><label>備註</label><input type="text" id="tc-notes" placeholder="例如：數學思維班"></div>' +
       '<div class="form-group"><label>成班目標人數</label><input type="number" id="tc-min" value="' + (parseInt(settings.courseMinCount) || 8) + '" min="1"></div>' +
@@ -1132,10 +1170,10 @@ async function teacherEditCourse(courseId) {
     '<div class="modal-body" style="padding:0;margin-top:12px">' +
       '<div class="form-group"><label>校區</label><select id="tc-campus">' + campuses.map(cc => '<option value="' + cc.id + '"' + (cc.id === c.campus_id ? ' selected' : '') + '>' + cc.name + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option value="' + g + '"' + (g === c.grade ? ' selected' : '') + '>' + g + '</option>').join('') + '</select></div>' +
-      '<div class="form-group"><label>學科</label><select id="tc-subject"><option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班">面試班</option></select></div>' +
+      '<div class="form-group"><label>學科</label><select id="tc-subject"><option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班（僅限幼兒年級）">面試班（僅限幼兒年級）</option></select></div>' +
       '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option value="' + w + '"' + (w === c.weekday ? ' selected' : '') + '>' + w + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" value="' + (c.time_slot || '') + '" placeholder="例如：08:30-11:00"></div>' +
-      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" value="' + (c.teacher_name || '') + '" placeholder="例如：張老師"></div>' +
+      '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" value="' + (c.teacher_name || '') + '" placeholder="例如：學而思_XX老師"></div>' +
       '<div class="form-group"><label>班級容量</label><input type="number" id="tc-capacity" value="' + (c.max_capacity || 20) + '" min="1" max="100"></div>' +
       '<div class="form-group"><label>備註</label><input type="text" id="tc-notes" value="' + (c.notes || '') + '"></div>' +
       '<div class="form-group"><label>成班目標人數</label><input type="number" id="tc-min" value="' + (c.min_count || parseInt(settings.courseMinCount) || 8) + '" min="1"></div>' +
@@ -1178,7 +1216,7 @@ function renderBranches(body) {
       '<div><strong>' + c.name + '</strong>' + (c.address ? '<span style="color:#888;font-size:13px;margin-left:8px">📍 ' + c.address + '</span>' : '') + '</div>' +
       '<div style="display:flex;gap:6px">' +
         '<button class="btn btn-sm btn-secondary" onclick="teacherEditBranch(\'' + c.id + '\')">✏️ 編輯</button>' +
-        '<button class="btn btn-sm btn-danger" onclick="teacherDeleteBranch(\'' + c.id + '\')">🗑️ 刪除</button>' +
+        '<button class="btn btn-sm btn-danger" onclick="teacherDeleteBranch(\'' + c.id + '\')">🗑️ 註銷</button>' +
       '</div></div>').join('') +
     '</div>';
 }
@@ -1409,31 +1447,109 @@ async function generateCSV(courseIds) {
 
 // ----- Teacher Manage -----
 async function renderTeacherManage(body) {
-  const isSuperAdmin = localStorage.getItem('teacher_username') === '395229';
-  if (!isSuperAdmin) {
-    body.innerHTML = '<h3>👤 教師管理</h3><p style="color:var(--gray-500)">僅最高權限帳號（395229）可管理教師</p>';
+  // 教師管理專用登入驗證
+  if (sessionStorage.getItem('tm_auth') !== '395229') {
+    body.innerHTML = '' +
+      '<div style="max-width:400px;margin:40px auto;padding:32px;background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:center">' +
+        '<div style="font-size:48px;margin-bottom:12px">🔐</div>' +
+        '<h3 style="margin:0 0 6px;font-size:18px">教師管理 · 管理員驗證</h3>' +
+        '<p style="font-size:13px;color:var(--gray-400);margin:0 0 20px">請輸入最高管理員（395229）的帳號密碼</p>' +
+        '<div style="text-align:left">' +
+          '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">' +
+            '<label style="font-size:13px;font-weight:500;color:var(--gray-700)">管理員帳號</label>' +
+            '<input id="tm-login-user" value="395229" readonly style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;background:var(--gray-50);color:var(--gray-600);width:100%;box-sizing:border-box;cursor:not-allowed">' +
+          '</div>' +
+          '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:20px">' +
+            '<label style="font-size:13px;font-weight:500;color:var(--gray-700)">密碼</label>' +
+            '<input type="password" id="tm-login-pw" placeholder="請輸入最高管理員密碼" style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:inherit;width:100%;box-sizing:border-box" onkeydown="if(event.key===\'Enter\')document.getElementById(\'tm-login-btn\').click()">' +
+          '</div>' +
+          '<button id="tm-login-btn" class="btn btn-primary" onclick="teacherMgmtLogin()" style="width:100%;padding:12px;font-size:15px">驗證並進入</button>' +
+          '<p id="tm-login-err" style="color:#EF4444;font-size:13px;display:none;margin-top:10px"></p>' +
+        '</div>' +
+      '</div>';
     return;
   }
   (async () => {
     const teachers = await api('GET', '/teachers');
-    body.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
-      '<h3 style="margin:0">👤 教師管理</h3>' +
-      '<button class="btn btn-primary btn-sm" onclick="teacherAddAccount()">＋ 新增教師</button></div>' +
-      '<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px">最高權限：395229（不可刪除）</p>' +
-      (teachers.length === 0 ? '<p style="color:var(--gray-400)">暫無教師帳號</p>' :
-        teachers.map(t => {
-          const isSuper = t.username === '395229';
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:8px">' +
+    const nonSuper = teachers.filter(function(t) { return t.username !== '395229'; });
+    body.innerHTML = '<h3 style="margin:0 0 16px">👤 教師管理</h3>' +
+      '<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px">最高權限帳號：395229（唯一超管，不可刪除）</p>' +
+
+      '<div style="background:var(--orange-50);border-radius:12px;padding:16px;margin-bottom:16px">' +
+        '<h4 style="margin:0 0 10px;font-size:15px">📝 新增教師</h4>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">教師姓名</label><input id="tm-add-name" placeholder="例如：學而思_XX老師" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">帳號</label><input id="tm-add-user" placeholder="登入帳號" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">密碼</label><input type="password" id="tm-add-pw" placeholder="密碼" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<button class="btn btn-primary btn-sm" onclick="teacherSubmitAdd()" style="padding:8px 16px;align-self:end">新增</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div style="background:var(--blue-50);border-radius:12px;padding:16px;margin-bottom:16px">' +
+        '<h4 style="margin:0 0 10px;font-size:15px">🔑 更改密碼</h4>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">教師帳號</label><input id="tm-cpw-user" placeholder="請輸入教師帳號" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">原密碼</label><input type="password" id="tm-cpw-old" placeholder="原密碼" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px"><label style="font-size:12px;color:var(--gray-600)">新密碼</label><input type="password" id="tm-cpw-new" placeholder="新密碼" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit"></div>' +
+          '<button class="btn btn-primary btn-sm" onclick="teacherSubmitChangePw()" style="padding:8px 16px;align-self:end">更改</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<h4 style="margin:16px 0 10px;font-size:15px">🗑️ 教師列表（點擊註銷刪除）</h4>' +
+      (teachers.length === 0 ? '<p style="color:var(--gray-400);font-size:13px">暫無教師帳號</p>' :
+        teachers.map(function(t) {
+          var isSuper = t.username === '395229';
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:6px">' +
             '<div><strong>' + escapeHtml(t.name) + '</strong>' +
-            '<span style="font-size:12px;color:var(--gray-400);margin-left:8px">(' + escapeHtml(t.username) + ')</span>' +
+            '<span style="font-size:12px;color:var(--gray-400);margin-left:6px">(' + escapeHtml(t.username) + ')</span>' +
             (isSuper ? '<span style="font-size:11px;background:#EF4444;color:#fff;padding:1px 6px;border-radius:4px;margin-left:6px">最高權限</span>' : '') +
             '</div>' +
-            '<div style="display:flex;gap:6px">' +
-            (isSuper ? '' : '<button class="btn btn-sm btn-secondary" onclick="teacherEditAccount(\'' + escapeHtml(t.username) + '\')">✏️ 編輯</button>' +
-            '<button class="btn btn-sm btn-danger" onclick="teacherDeleteAccount(\'' + escapeHtml(t.username) + '\')">🗑️ 刪除</button>') +
-            '</div></div>';
+            (isSuper ? '' : '<button class="btn btn-sm btn-danger" onclick="teacherDeleteAccount(\'' + escapeHtml(t.username) + '\')">🗑️ 註銷</button>') +
+            '</div>';
         }).join(''));
   })();
+}
+
+function teacherMgmtLogin() {
+  var pw = document.getElementById('tm-login-pw').value.trim();
+  var errEl = document.getElementById('tm-login-err');
+  if (!pw) { errEl.textContent = '請輸入密碼'; errEl.style.display = ''; return; }
+  errEl.style.display = 'none';
+  api('POST', '/auth/login', { username: '395229', password: pw }).then(function(r) {
+    if (r.success) {
+      sessionStorage.setItem('tm_auth', '395229');
+      renderTeacherManage(document.getElementById('panel-body'));
+    } else {
+      errEl.textContent = '密碼錯誤，請重試';
+      errEl.style.display = '';
+    }
+  });
+}
+
+function teacherSubmitAdd() {
+  var name = document.getElementById('tm-add-name').value.trim();
+  var user = document.getElementById('tm-add-user').value.trim();
+  var pw = document.getElementById('tm-add-pw').value.trim();
+  if (!name || !user || !pw) { showToast('請填寫完整資料', 'error'); return; }
+  api('POST', '/teachers', { name: name, username: user, password: pw }).then(function(r) {
+    showToast(r.success ? '✅ 新增成功' : (r.message || '❌ 失敗'), r.success ? 'success' : 'error');
+    renderTeacherManage(document.getElementById('panel-body'));
+  });
+}
+
+function teacherSubmitChangePw() {
+  var username = document.getElementById('tm-cpw-user').value;
+  var oldPw = document.getElementById('tm-cpw-old').value.trim();
+  var newPw = document.getElementById('tm-cpw-new').value.trim();
+  if (!username || !oldPw || !newPw) { showToast('請填寫完整資料', 'error'); return; }
+  api('PUT', '/teachers/' + encodeURIComponent(username), { oldPassword: oldPw, password: newPw }).then(function(r) {
+    showToast(r.success ? '✅ 密碼已更新' : (r.message || '❌ ' + (r.message || '修改失敗')), r.success ? 'success' : 'error');
+    if (r.success) {
+      document.getElementById('tm-cpw-old').value = '';
+      document.getElementById('tm-cpw-new').value = '';
+    }
+    renderTeacherManage(document.getElementById('panel-body'));
+  });
 }
 
 async function teacherAddAccount() {
@@ -1452,19 +1568,18 @@ async function teacherAddAccount() {
   renderTeacherManage(document.getElementById('panel-body'));
 }
 
-async function teacherEditAccount(username) {
-  const newName = await showPromptModal('修改教師姓名（留空不變更）');
-  if (newName && newName.trim()) {
-    await api('PUT', '/teachers/' + encodeURIComponent(username), { name: newName.trim() });
+async function teacherChangePassword(username) {
+  const oldPw = await showPromptModal('請輸入原密碼');
+  if (!oldPw) return;
+  const newPw = await showPromptModal('請輸入新密碼');
+  if (!newPw) return;
+  const result = await api('PUT', '/teachers/' + encodeURIComponent(username), { oldPassword: oldPw, password: newPw });
+  if (result.success) {
+    showToast('密碼已更新！', 'success');
+  } else {
+    showToast(result.message || '密碼修改失敗', 'error');
   }
-  const newPw = await showPromptModal('修改教師密碼（留空不變更）');
-  if (newPw && newPw.trim()) {
-    await api('PUT', '/teachers/' + encodeURIComponent(username), { password: newPw.trim() });
-  }
-  if (newName || newPw) {
-    showToast('教師資料已更新！', 'success');
-    renderTeacherManage(document.getElementById('panel-body'));
-  }
+  renderTeacherManage(document.getElementById('panel-body'));
 }
 
 async function teacherDeleteAccount(username) {

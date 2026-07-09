@@ -12,6 +12,17 @@ const POST_CATEGORIES = ["", "教育討論", "關於學而思", "吹水台"];
 
 // Middleware
 app.use(express.json());
+
+// 禁用 HTML 快取 (必須在 static 之前，確保 header 被正確設定)
+app.use(function(req, res, next) {
+  if (req.path.endsWith('.html') || req.path === '/') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ===== File-based Database =====
@@ -166,8 +177,14 @@ app.put('/api/teachers/:username', (req, res) => {
   const db = getDB();
   const t = db.teachers.find(t => t.username === req.params.username);
   if (!t) return res.status(404).json({ success: false, message: '教師不存在' });
-  const { password, name } = req.body;
-  if (password !== undefined) t.password = password;
+  const { password, name, oldPassword } = req.body;
+  // 如果要修改密碼，需驗證原密碼
+  if (password !== undefined) {
+    if (oldPassword !== undefined && oldPassword !== t.password) {
+      return res.json({ success: false, message: '原密碼錯誤' });
+    }
+    t.password = password;
+  }
   if (name !== undefined) t.name = name;
   saveDB(db);
   res.json({ success: true, teacher: { username: t.username, name: t.name } });
@@ -311,6 +328,8 @@ app.get('/api/posts', (req, res) => {
   const sortBy = req.query.sort || 'time';
   if (sortBy === 'likes') {
     posts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  } else if (sortBy === 'comments') {
+    posts.sort((a, b) => ((b.comments && b.comments.length) || 0) - ((a.comments && a.comments.length) || 0));
   } else {
     posts.sort((a, b) => b.created_at - a.created_at);
   }
@@ -334,12 +353,17 @@ app.post('/api/posts/:id/like', (req, res) => {
   if (!post.liked_ips) post.liked_ips = [];
   const clientIp = req.ip || req.connection.remoteAddress;
   if (post.liked_ips.includes(clientIp)) {
-    return res.json({ success: false, message: '您已經點過讚了', likes: post.likes });
+    // Unlike
+    post.liked_ips = post.liked_ips.filter(ip => ip !== clientIp);
+    post.likes = Math.max(0, (post.likes || 0) - 1);
+    saveDB(db);
+    return res.json({ success: true, liked: false, likes: post.likes });
   }
+  // Like
   post.liked_ips.push(clientIp);
   post.likes = (post.likes || 0) + 1;
   saveDB(db);
-  res.json({ success: true, likes: post.likes });
+  res.json({ success: true, liked: true, likes: post.likes });
 });
 
 app.post('/api/posts/:id/comment', (req, res) => {
