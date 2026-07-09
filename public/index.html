@@ -347,6 +347,15 @@ a:hover{color:var(--orange-700)}
       <button class="btn btn-primary" onclick="openAddPostModal()">✏️ 發佈匿名帖子</button>
     </div>
     <p style="color:var(--gray-400);font-size:14px;margin-bottom:20px;">匿名發帖，自由交流。請友善發言 🤫</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+      <select id="filter-category" onchange="renderPosts()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit">
+        <option value="">全部分類</option><option value="教育討論">教育討論</option><option value="關於學而思">關於學而思</option><option value="吹水台">吹水台</option>
+      </select>
+      <input type="text" id="search-posts" placeholder="🔍 搜索帖子內容或暱稱..." style="flex:1;min-width:160px;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:#fff;max-width:300px" oninput="renderPosts()">
+      <select id="sort-posts" onchange="renderPosts()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;background:#fff;font-family:inherit">
+        <option value="time">⏱️ 最新</option><option value="likes">❤️ 最熱</option>
+      </select>
+    </div>
     <div id="post-list" class="post-list"></div>
   </section>
 </div>
@@ -404,7 +413,7 @@ a:hover{color:var(--orange-700)}
       <div class="form-group">
         <label>學科</label>
         <select id="ac-subject">
-          <option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option>
+          <option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班">面試班</option>
         </select>
       </div>
       <div class="form-group">
@@ -489,6 +498,15 @@ a:hover{color:var(--orange-700)}
         <input type="text" id="ap-nickname" placeholder="例如：東區家長、小五媽媽" maxlength="12">
       </div>
       <div class="form-group">
+        <label>分類</label>
+        <select id="ap-category" style="padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:#fff">
+          <option value="">不分類</option>
+          <option value="教育討論">教育討論</option>
+          <option value="關於學而思">關於學而思</option>
+          <option value="吹水台">吹水台</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>帖子內容</label>
         <textarea id="ap-content" placeholder="說說您的想法、疑問或心得…" style="min-height:120px"></textarea>
       </div>
@@ -516,6 +534,7 @@ a:hover{color:var(--orange-700)}
     <button data-section="branches" onclick="switchPanel('branches')">🏫 校區管理</button>
     <button data-section="banner" onclick="switchPanel('banner')">🖼️ 外觀設定</button>
     <button data-section="activities" onclick="switchPanel('activities')">🎉 活動管理</button>
+    <button data-section="teachers" onclick="switchPanel('teachers')" id="nav-teachers" style="display:none">👤 教師管理</button>
     <button data-section="treehole" onclick="switchPanel('treehole')">🌳 樹洞管理</button>
     <button data-section="export" onclick="switchPanel('export')">📥 數據導出</button>
   </div>
@@ -854,6 +873,7 @@ async function renderPosts() {
         '<div class="post-author">' +
           '<div class="avatar" style="background:' + colors[colorIdx] + ';color:#fff">' + (p.nickname || '匿名')[0] + '</div>' +
           '<span class="name">' + (p.nickname || '匿名家長') + '</span>' +
+          (p.category ? '<span style="font-size:11px;padding:2px 8px;background:var(--orange-100);color:var(--orange-700);border-radius:10px;margin-left:6px">' + p.category + '</span>' : '') +
           '<span style="font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:0 6px;border-radius:4px">匿名</span>' +
         '</div>' +
         '<span class="post-time">' + date + '</span>' +
@@ -889,6 +909,8 @@ async function toggleLike(postId) {
   const result = await api('POST', '/posts/' + postId + '/like');
   if (result.success) {
     document.getElementById('like-count-' + postId).textContent = result.likes;
+  } else if (result.message) {
+    showToast(result.message, 'info');
   }
 }
 
@@ -953,14 +975,16 @@ function showPromptModal(title, defaultValue) {
 function openAddPostModal() {
   document.getElementById('ap-nickname').value = '';
   document.getElementById('ap-content').value = '';
+  document.getElementById('ap-category').value = '';
   openModal('add-post-modal');
 }
 
 async function submitPost() {
   const nickname = document.getElementById('ap-nickname').value.trim() || '匿名家長';
   const content = document.getElementById('ap-content').value.trim();
+  const category = document.getElementById('ap-category').value;
   if (!content) { showToast('請輸入帖子內容', 'error'); return; }
-  await api('POST', '/posts', { nickname, content });
+  await api('POST', '/posts', { nickname, content, category });
   closeModal('add-post-modal');
   showToast('發佈成功！🌳', 'success');
   await renderPosts();
@@ -983,6 +1007,8 @@ async function handleLogin() {
   const result = await api('POST', '/auth/login', { username, password });
   if (!result.success) { showToast('帳號或密碼錯誤', 'error'); return; }
   currentTeacher = result;
+  localStorage.setItem('teacher_username', result.username);
+  document.getElementById('nav-teachers').style.display = (result.username === '395229') ? '' : 'none';
   closeModal('login-modal');
   document.getElementById('panel-username').textContent = result.name;
   document.getElementById('teacher-panel').classList.add('open');
@@ -990,7 +1016,7 @@ async function handleLogin() {
   showToast('歡迎回來，' + result.name + '！', 'success');
 }
 
-function handleLogout() { currentTeacher = null; closeTeacherPanel(); showToast('已登出', 'info'); }
+function handleLogout() { currentTeacher = null; localStorage.removeItem('teacher_username'); closeTeacherPanel(); showToast('已登出', 'info'); }
 function closeTeacherPanel() { document.getElementById('teacher-panel').classList.remove('open'); }
 
 // ===== Teacher Panel =====
@@ -1003,6 +1029,7 @@ function switchPanel(section) {
     case 'branches': renderBranches(body); break;
     case 'banner': renderBannerSettings(body); break;
     case 'activities': renderActivitiesSettings(body); break;
+    case 'teachers': renderTeacherManage(body); break;
     case 'treehole': renderTreeholeManage(body); break;
     case 'export': renderExport(body); break;
   }
@@ -1067,7 +1094,7 @@ function teacherAddCourse() {
   body.innerHTML = '<h3>＋ 新增課程</h3>' +
     '<div class="modal-body" style="padding:0;margin-top:12px">' +
       '<div class="form-group"><label>校區</label><select id="tc-campus">' + campuses.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('') + '</select></div>' +
-      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K1','K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option>' + g + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option>' + g + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>學科</label><select id="tc-subject"><option>數學</option><option>英語（僅限幼兒年級）</option></select></div>' +
       '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option>' + w + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" placeholder="例如：08:30-11:00"></div>' +
@@ -1104,8 +1131,8 @@ async function teacherEditCourse(courseId) {
   body.innerHTML = '<h3>編輯課程</h3>' +
     '<div class="modal-body" style="padding:0;margin-top:12px">' +
       '<div class="form-group"><label>校區</label><select id="tc-campus">' + campuses.map(cc => '<option value="' + cc.id + '"' + (cc.id === c.campus_id ? ' selected' : '') + '>' + cc.name + '</option>').join('') + '</select></div>' +
-      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K1','K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option value="' + g + '"' + (g === c.grade ? ' selected' : '') + '>' + g + '</option>').join('') + '</select></div>' +
-      '<div class="form-group"><label>學科</label><select id="tc-subject"><option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option></select></div>' +
+      '<div class="form-group"><label>年級</label><select id="tc-grade">' + ['K2','K3','P1','P2','P3','P4','P5','P6','S1','S2','S3','S4'].map(g => '<option value="' + g + '"' + (g === c.grade ? ' selected' : '') + '>' + g + '</option>').join('') + '</select></div>' +
+      '<div class="form-group"><label>學科</label><select id="tc-subject"><option value="數學">數學</option><option value="英語（僅限幼兒年級）">英語（僅限幼兒年級）</option><option value="面試班">面試班</option></select></div>' +
       '<div class="form-group"><label>星期</label><select id="tc-weekday">' + ['週二','週三','週四','週五','週六','週日'].map(w => '<option value="' + w + '"' + (w === c.weekday ? ' selected' : '') + '>' + w + '</option>').join('') + '</select></div>' +
       '<div class="form-group"><label>時間段</label><input type="text" id="tc-time" value="' + (c.time_slot || '') + '" placeholder="例如：08:30-11:00"></div>' +
       '<div class="form-group"><label>授課老師</label><input type="text" id="tc-teacher" value="' + (c.teacher_name || '') + '" placeholder="例如：張老師"></div>' +
@@ -1301,7 +1328,7 @@ function renderTreeholeManage(body) {
           '<div style="padding:12px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:8px">' +
             '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
               '<div><strong style="font-size:13px;color:var(--gray-500)">' + escapeHtml(p.nickname || '匿名家長') + '</strong>' +
-              '<span style="font-size:12px;color:var(--gray-400);margin-left:8px">' + new Date(p.created_at).toLocaleString('zh-Hant') + '</span></div>' +
+              '<span style="font-size:12px;color:var(--gray-400);margin-left:8px">' + new Date(p.created_at).toLocaleString('zh-Hant') + '</span>' + (p.category ? '<span style="font-size:11px;padding:1px 6px;background:var(--orange-100);color:var(--orange-700);border-radius:8px;margin-left:4px">' + p.category + '</span>' : '') + '</div>' +
               '<button class="btn btn-danger btn-sm" onclick="teacherDeletePost(\'' + p.id + '\')">刪除</button></div>' +
             '<p style="margin-top:8px;font-size:14px">' + escapeHtml(p.content) + '</p>' +'<div style="margin-top:6px;font-size:12px;color:var(--gray-400);display:flex;gap:12px">' +'<span>❤️ ' + (p.likes || 0) + '</span>' +'<span>💬 ' + ((p.comments && p.comments.length) || 0) + '</span>' +'</div>' +((p.comments && p.comments.length > 0) ? '<div style="margin-top:6px;padding-left:10px;border-left:2px solid #f0e8e0;font-size:12px;color:var(--gray-500)">' + p.comments.slice(-2).map(function(c){return '<div style="margin-bottom:3px"><span style="color:var(--gray-600);font-weight:500">' + escapeHtml(c.nickname || '匿名家長') + '：</span>' + escapeHtml(c.content) + '</div>';}).join('') + '</div>' : '') +'</div>').join(''));
   })();
@@ -1378,6 +1405,79 @@ async function generateCSV(courseIds) {
   URL.revokeObjectURL(url);
   showToast('已導出 ' + rows.length + ' 條報名資料 📥', 'success');
 }
+
+
+// ----- Teacher Manage -----
+async function renderTeacherManage(body) {
+  const isSuperAdmin = localStorage.getItem('teacher_username') === '395229';
+  if (!isSuperAdmin) {
+    body.innerHTML = '<h3>👤 教師管理</h3><p style="color:var(--gray-500)">僅最高權限帳號（395229）可管理教師</p>';
+    return;
+  }
+  (async () => {
+    const teachers = await api('GET', '/teachers');
+    body.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+      '<h3 style="margin:0">👤 教師管理</h3>' +
+      '<button class="btn btn-primary btn-sm" onclick="teacherAddAccount()">＋ 新增教師</button></div>' +
+      '<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px">最高權限：395229（不可刪除）</p>' +
+      (teachers.length === 0 ? '<p style="color:var(--gray-400)">暫無教師帳號</p>' :
+        teachers.map(t => {
+          const isSuper = t.username === '395229';
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--gray-100);border-radius:8px;margin-bottom:8px">' +
+            '<div><strong>' + escapeHtml(t.name) + '</strong>' +
+            '<span style="font-size:12px;color:var(--gray-400);margin-left:8px">(' + escapeHtml(t.username) + ')</span>' +
+            (isSuper ? '<span style="font-size:11px;background:#EF4444;color:#fff;padding:1px 6px;border-radius:4px;margin-left:6px">最高權限</span>' : '') +
+            '</div>' +
+            '<div style="display:flex;gap:6px">' +
+            (isSuper ? '' : '<button class="btn btn-sm btn-secondary" onclick="teacherEditAccount(\'' + escapeHtml(t.username) + '\')">✏️ 編輯</button>' +
+            '<button class="btn btn-sm btn-danger" onclick="teacherDeleteAccount(\'' + escapeHtml(t.username) + '\')">🗑️ 刪除</button>') +
+            '</div></div>';
+        }).join(''));
+  })();
+}
+
+async function teacherAddAccount() {
+  const username = await showPromptModal('請輸入教師帳號');
+  if (!username || !username.trim()) return;
+  const password = await showPromptModal('請輸入教師密碼');
+  if (!password || !password.trim()) return;
+  const name = await showPromptModal('請輸入教師姓名');
+  if (!name || !name.trim()) return;
+  const result = await api('POST', '/teachers', { username: username.trim(), password: password.trim(), name: name.trim() });
+  if (result.success) {
+    showToast('教師新增成功！', 'success');
+  } else {
+    showToast(result.message || '新增失敗', 'error');
+  }
+  renderTeacherManage(document.getElementById('panel-body'));
+}
+
+async function teacherEditAccount(username) {
+  const newName = await showPromptModal('修改教師姓名（留空不變更）');
+  if (newName && newName.trim()) {
+    await api('PUT', '/teachers/' + encodeURIComponent(username), { name: newName.trim() });
+  }
+  const newPw = await showPromptModal('修改教師密碼（留空不變更）');
+  if (newPw && newPw.trim()) {
+    await api('PUT', '/teachers/' + encodeURIComponent(username), { password: newPw.trim() });
+  }
+  if (newName || newPw) {
+    showToast('教師資料已更新！', 'success');
+    renderTeacherManage(document.getElementById('panel-body'));
+  }
+}
+
+async function teacherDeleteAccount(username) {
+  if (!confirm('確定要刪除教師帳號「' + username + '」嗎？')) return;
+  const result = await api('DELETE', '/teachers/' + encodeURIComponent(username));
+  if (result.success) {
+    showToast('教師已刪除', 'info');
+  } else {
+    showToast(result.message || '刪除失敗', 'error');
+  }
+  renderTeacherManage(document.getElementById('panel-body'));
+}
+
 
 // ===== Init =====
 async function init() {

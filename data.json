@@ -72,42 +72,6 @@
       "created_at": 1782402858081
     },
     {
-      "id": "mr2vet6ot4ol",
-      "campus_id": "c2",
-      "grade": "K1",
-      "weekday": "週二",
-      "time_slot": "上午（0830-1200）",
-      "notes": "面試班",
-      "teacher_name": "",
-      "max_capacity": 20,
-      "min_count": 8,
-      "created_at": 1782958424640
-    },
-    {
-      "id": "mr2y9i0b6ofk",
-      "campus_id": "c4",
-      "grade": "K1",
-      "weekday": "週二",
-      "time_slot": "上午（0830-1200）",
-      "notes": "面試班",
-      "teacher_name": "",
-      "max_capacity": 20,
-      "min_count": 8,
-      "created_at": 1782963215723
-    },
-    {
-      "id": "mr2yfpnq7q3t",
-      "campus_id": "c3",
-      "grade": "K1",
-      "weekday": "週二",
-      "time_slot": "上午（0830-1200）",
-      "notes": "面試班",
-      "teacher_name": "",
-      "max_capacity": 20,
-      "min_count": 8,
-      "created_at": 1782963505574
-    },
-    {
       "id": "mr2ypf0lflys",
       "campus_id": "c5",
       "grade": "K3",
@@ -154,101 +118,9 @@
       "max_capacity": 20,
       "min_count": 8,
       "created_at": 1783063396616
-    },
-    {
-      "id": "mr50er1jdqhl",
-      "campus_id": "c2",
-      "grade": "K1",
-      "weekday": "週二",
-      "time_slot": "",
-      "notes": "面試班",
-      "teacher_name": "",
-      "max_capacity": 20,
-      "min_count": 8,
-      "created_at": 1783087752295
     }
   ],
   "registrations": [
-    {
-      "id": "r1",
-      "course_id": "co1",
-      "phone": "13800001111",
-      "student_name": "王小明",
-      "notes": "",
-      "created_at": 1782748458081
-    },
-    {
-      "id": "r2",
-      "course_id": "co1",
-      "phone": "13800002222",
-      "student_name": "李小華",
-      "notes": "希望早點開班",
-      "created_at": 1782791658081
-    },
-    {
-      "id": "r3",
-      "course_id": "co2",
-      "phone": "13900003333",
-      "student_name": "張小美",
-      "notes": "",
-      "created_at": 1782662058081
-    },
-    {
-      "id": "mr1cvb0dwh4h",
-      "course_id": "mr1cvaj7iw9m",
-      "phone": "12345678900",
-      "student_name": "啊啊啊",
-      "notes": "",
-      "created_at": 1782866815357
-    },
-    {
-      "id": "mr2uqra3xms1",
-      "course_id": "mr2uqr9zsaie",
-      "phone": "52222222",
-      "student_name": "li",
-      "notes": "",
-      "created_at": 1782957302427
-    },
-    {
-      "id": "mr2urkku75n6",
-      "course_id": "mr2urkkoqh7u",
-      "phone": "52223333",
-      "student_name": "oo",
-      "notes": "",
-      "created_at": 1782957340398
-    },
-    {
-      "id": "mr2v63d9g67y",
-      "course_id": "mr2v63cxyywa",
-      "phone": "52223333",
-      "student_name": "ww",
-      "notes": "",
-      "created_at": 1782958017933
-    },
-    {
-      "id": "mr2v9eaq2nsz",
-      "course_id": "mr2v9eamcy9h",
-      "phone": "52324444",
-      "student_name": "ee",
-      "notes": "",
-      "created_at": 1782958172066
-    },
-    {
-      "id": "mr2y9i0f0gkr",
-      "course_id": "mr2y9i0b6ofk",
-      "phone": "67891234",
-      "student_name": "pp",
-      "notes": "",
-      "created_at": 1782963215727
-    },
-    {
-      "id": "mr2yfpot4jmd",
-      "course_id": "mr2yfpnq7q3t",
-      "phone": "52223434",
-      "student_name": "QQ",
-      "notes": "",
-      "created_at": 1782963505613
-    },
     {
       "id": "mr2ypf5txyd0",
       "course_id": "mr2ypf0lflys",
@@ -266,14 +138,6 @@
       "created_at": 1783003249581
     },
     {
-      "id": "mr3mws2lnr27",
-      "course_id": "mr2y9i0b6ofk",
-      "phone": "66666666",
-      "student_name": "耶耶",
-      "notes": "",
-      "created_at": 1783004612637
-    },
-    {
       "id": "mr3n0wuy4ce2",
       "course_id": "mr3n0wt4rj9e",
       "phone": "66665471",
@@ -288,14 +152,6 @@
       "student_name": "PP",
       "notes": "",
       "created_at": 1783063396653
-    },
-    {
-      "id": "mr4pyhg57zz3",
-      "course_id": "mr2vet6ot4ol",
-      "phone": "56246614",
-      "student_name": "55",
-      "notes": "",
-      "created_at": 1783070197205
     }
   ],
   "posts": [
@@ -304,7 +160,11 @@
       "nickname": "東區媽媽",
       "content": "請問各位家長，荃灣西校區的數學思維班老師教得怎麼樣？",
       "created_at": 1782662058081,
-      "likes": 5
+      "likes": 6,
+      "category": "",
+      "liked_ips": [
+        "127.0.0.1"
+      ]
     },
     {
       "id": "p2",
@@ -325,7 +185,8 @@
           "content": "defg",
           "created_at": 1783062757625
         }
-      ]
+      ],
+      "category": ""
     },
     {
       "id": "mr3m22fy3qha",
@@ -346,7 +207,8 @@
           "content": "真的超級棒！！",
           "created_at": 1783004881508
         }
-      ]
+      ],
+      "category": ""
     },
     {
       "id": "mr3m2jtt98u4",
@@ -354,7 +216,8 @@
       "content": "新校區環境真好",
       "created_at": 1783003202273,
       "likes": 0,
-      "comments": []
+      "comments": [],
+      "category": ""
     },
     {
       "id": "mr3mz8t8l4wx",
@@ -375,7 +238,8 @@
           "content": "居然還有高手",
           "created_at": 1783005274489
         }
-      ]
+      ],
+      "category": ""
     },
     {
       "id": "mr3nbphu2trq",
@@ -390,7 +254,8 @@
           "content": "真的太棒了！",
           "created_at": 1783062711105
         }
-      ]
+      ],
+      "category": ""
     },
     {
       "id": "mr4m0wl5ag82",
@@ -398,7 +263,32 @@
       "content": "學而思西寶城太棒了~~~~",
       "created_at": 1783063591674,
       "likes": 14,
-      "comments": []
+      "comments": [],
+      "category": ""
+    },
+    {
+      "id": "mrd59hqkz989",
+      "nickname": "測試家長",
+      "content": "這是教育討論帖",
+      "category": "教育討論",
+      "created_at": 1783579634444,
+      "likes": 1,
+      "comments": [],
+      "liked_ips": [
+        "127.0.0.1"
+      ]
+    },
+    {
+      "id": "mrd6f5jhkmbv",
+      "nickname": "匿名家長",
+      "content": "ppp",
+      "category": "關於學而思",
+      "created_at": 1783581578189,
+      "likes": 1,
+      "comments": [],
+      "liked_ips": [
+        "127.0.0.1"
+      ]
     }
   ],
   "activities": [
@@ -424,16 +314,6 @@
     "courseMinCount": "8"
   },
   "teachers": [
-    {
-      "username": "admin",
-      "password": "admin123",
-      "name": "管理員"
-    },
-    {
-      "username": "teacher",
-      "password": "teacher123",
-      "name": "張老師"
-    },
     {
       "username": "395229",
       "password": "1234567a",

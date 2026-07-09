@@ -5,6 +5,10 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 8911;
 const HOST = process.env.PORT ? '0.0.0.0' : '127.0.0.1';
+// 學科／年級可選列表
+const SUBJECTS = ["數學", "英語（僅限幼兒年級）", "面試班"];
+const POST_CATEGORIES = ["", "教育討論", "關於學而思", "吹水台"];
+
 
 // Middleware
 app.use(express.json());
@@ -136,6 +140,51 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+// Teachers CRUD
+app.get('/api/teachers', (req, res) => {
+  const db = getDB();
+  const safeTeachers = db.teachers.map(t => ({ username: t.username, name: t.name }));
+  res.json(safeTeachers);
+});
+
+app.post('/api/teachers', (req, res) => {
+  const db = getDB();
+  const { username, password, name } = req.body;
+  if (!username || !password || !name) {
+    return res.json({ success: false, message: '請填寫完整資料（帳號、密碼、姓名）' });
+  }
+  if (db.teachers.find(t => t.username === username)) {
+    return res.json({ success: false, message: '帳號已存在' });
+  }
+  const teacher = { username, password, name };
+  db.teachers.push(teacher);
+  saveDB(db);
+  res.json({ success: true, teacher: { username: teacher.username, name: teacher.name } });
+});
+
+app.put('/api/teachers/:username', (req, res) => {
+  const db = getDB();
+  const t = db.teachers.find(t => t.username === req.params.username);
+  if (!t) return res.status(404).json({ success: false, message: '教師不存在' });
+  const { password, name } = req.body;
+  if (password !== undefined) t.password = password;
+  if (name !== undefined) t.name = name;
+  saveDB(db);
+  res.json({ success: true, teacher: { username: t.username, name: t.name } });
+});
+
+app.delete('/api/teachers/:username', (req, res) => {
+  const db = getDB();
+  if (req.params.username === '395229') {
+    return res.json({ success: false, message: '不能刪除最高權限帳號' });
+  }
+  const idx = db.teachers.findIndex(t => t.username === req.params.username);
+  if (idx === -1) return res.status(404).json({ success: false, message: '教師不存在' });
+  db.teachers.splice(idx, 1);
+  saveDB(db);
+  res.json({ success: true });
+});
+
 // Campuses
 app.get('/api/campuses', (req, res) => {
   const db = getDB();
@@ -186,8 +235,8 @@ app.get('/api/courses', (req, res) => {
 
 app.post('/api/courses', (req, res) => {
   const db = getDB();
-  const { campusId, grade, weekday, timeSlot, notes, minCount, teacherName, maxCapacity } = req.body;
-  const course = { id: genId(), campus_id: campusId, grade, weekday, time_slot: timeSlot, notes: notes || '', teacher_name: teacherName || '', max_capacity: maxCapacity || 20, min_count: minCount || 8, created_at: Date.now() };
+  const { campusId, grade, subject, weekday, timeSlot, notes, minCount, teacherName, maxCapacity } = req.body;
+  const course = { id: genId(), campus_id: campusId, grade, subject: subject || '數學', weekday, time_slot: timeSlot, notes: notes || '', teacher_name: teacherName || '', max_capacity: maxCapacity || 20, min_count: minCount || 8, created_at: Date.now() };
   db.courses.push(course);
   saveDB(db);
   res.json(course);
@@ -199,6 +248,8 @@ app.put('/api/courses/:id', (req, res) => {
   const course = db.courses.find(c => c.id === req.params.id);
   if (course) {
     if (grade) course.grade = grade;
+    if (req.body.subject) course.subject = req.body.subject;
+
     if (weekday) course.weekday = weekday;
     if (timeSlot) course.time_slot = timeSlot;
     if (notes !== undefined) course.notes = notes;
@@ -246,14 +297,31 @@ app.post('/api/registrations', (req, res) => {
 // Posts
 app.get('/api/posts', (req, res) => {
   const db = getDB();
-  res.json([...db.posts].sort((a, b) => b.created_at - a.created_at));
+  let posts = [...db.posts];
+  if (req.query.category && req.query.category !== '') {
+    posts = posts.filter(p => p.category === req.query.category);
+  }
+  if (req.query.search && req.query.search.trim() !== '') {
+    const q = req.query.search.trim().toLowerCase();
+    posts = posts.filter(p =>
+      p.content.toLowerCase().includes(q) ||
+      p.nickname.toLowerCase().includes(q)
+    );
+  }
+  const sortBy = req.query.sort || 'time';
+  if (sortBy === 'likes') {
+    posts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  } else {
+    posts.sort((a, b) => b.created_at - a.created_at);
+  }
+  res.json(posts);
 });
 
 app.post('/api/posts', (req, res) => {
   const db = getDB();
-  const { nickname, content } = req.body;
+  const { nickname, content, category } = req.body;
   if (!content) return res.json({ success: false, message: '請輸入內容' });
-  const post = { id: genId(), nickname: nickname || '匿名家長', content, created_at: Date.now(), likes: 0, comments: [] };
+  const post = { id: genId(), nickname: nickname || '匿名家長', content, category: category || '', created_at: Date.now(), likes: 0, comments: [], liked_ips: [] };
   db.posts.push(post);
   saveDB(db);
  res.json({ success: true, id: post.id });
@@ -263,6 +331,12 @@ app.post('/api/posts/:id/like', (req, res) => {
   const db = getDB();
   const post = db.posts.find(p => p.id === req.params.id);
   if (!post) return res.status(404).json({ success: false });
+  if (!post.liked_ips) post.liked_ips = [];
+  const clientIp = req.ip || req.connection.remoteAddress;
+  if (post.liked_ips.includes(clientIp)) {
+    return res.json({ success: false, message: '您已經點過讚了', likes: post.likes });
+  }
+  post.liked_ips.push(clientIp);
   post.likes = (post.likes || 0) + 1;
   saveDB(db);
   res.json({ success: true, likes: post.likes });
